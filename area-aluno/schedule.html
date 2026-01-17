@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos - Área do Aluno</title>
+    <link rel="stylesheet" href="../css/area-aluno.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        :root {
+            --primary: #ff6b35;
+            --primary-dark: #e55a2b;
+            --secondary: #2d3436;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --info: #0984e3;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --light: #f8f9fa;
+            --shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .schedule-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(180deg, var(--dark) 0%, #1a1e21 100%);
+            color: white;
+            padding: 0;
+            position: relative;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .user-profile-sidebar {
+            text-align: center;
+            padding: 40px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .user-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            margin: 0 auto 20px;
+            overflow: hidden;
+            background: linear-gradient(45deg, #2d3436, #0984e3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .user-plan {
+            background: linear-gradient(45deg, var(--primary), #ff8e53);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            padding: 30px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 30px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-size: 1rem;
+            position: relative;
+            margin: 5px 0;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-left-color: rgba(255,107,53,0.5);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(255,107,53,0.15), transparent);
+            color: white;
+            border-left-color: var(--primary);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .nav-item i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .logout-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(220, 53, 69, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .logout-btn:hover {
+            background: #dc3545;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 40px;
+            background: #f5f7fa;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            color: var(--dark);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-to-dashboard {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-to-dashboard:hover {
+            background: rgba(255,107,53,0.1);
+            transform: translateX(-5px);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            color: var(--dark);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), #ff8e53);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(255,107,53,0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--primary-dark), #ff7b42);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,107,53,0.4);
+        }
+
+        /* CONTENT GRID */
+        .schedule-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .schedule-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* CARDS */
+        .schedule-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .schedule-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f5;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-header i {
+            color: var(--primary);
+        }
+
+        .see-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .see-all:hover {
+            gap: 8px;
+        }
+
+        /* CALENDÁRIO */
+        .calendar-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .calendar-nav-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .calendar-title {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            padding: 12px 5px;
+            font-weight: 600;
+            color: var(--gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-day {
+            text-align: center;
+            padding: 18px 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+            font-size: 1rem;
+            border: 2px solid transparent;
+        }
+
+        .calendar-day:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .calendar-day.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255,107,53,0.3);
+        }
+
+        .calendar-day.today {
+            background: #e3f2fd;
+            color: var(--info);
+            border: 2px solid var(--info);
+        }
+
+        .calendar-day.has-events::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .calendar-day.active.has-events::after {
+            background: white;
+        }
+
+        .calendar-day.other-month {
+            color: #adb5bd;
+            background: #f8f9fa;
+        }
+
+        .calendar-day.disabled {
+            color: #dee2e6;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+
+        .calendar-day.disabled:hover {
+            background: #f8f9fa;
+            transform: none;
+        }
+
+        /* TIME SLOTS */
+        .time-slots {
+            margin-top: 30px;
+        }
+
+        .time-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .time-header h3 {
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-header h3 i {
+            color: var(--primary);
+        }
+
+        .selected-date {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .time-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .time-slot {
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            background: white;
+            position: relative;
+        }
+
+        .time-slot:hover:not(.unavailable) {
+            border-color: var(--primary);
+            background: rgba(255,107,53,0.05);
+            transform: translateY(-3px);
+        }
+
+        .time-slot.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255,107,53,0.3);
+        }
+
+        .time-slot.unavailable {
+            background: #f8f9fa;
+            color: #adb5bd;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .time-slot.unavailable::after {
+            content: '✕';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.8rem;
+            color: var(--danger);
+        }
+
+        /* CLASSES LIST */
+        .classes-list {
+            margin-top: 10px;
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #f1f3f5;
+            transition: all 0.3s;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border: 1px solid transparent;
+        }
+
+        .class-item:hover {
+            background: #f8f9fa;
+            border-color: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .class-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .class-info h4 {
+            margin: 0 0 8px 0;
+            color: var(--dark);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .class-info p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .class-info i {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .class-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .btn-confirm {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .btn-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .btn-canceled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .btn-cancel {
+            background: var(--danger);
+        }
+
+        .btn-cancel:hover {
+            background: #c82333;
+            transform: rotate(90deg);
+        }
+
+        .btn-edit {
+            background: var(--info);
+        }
+
+        .btn-edit:hover {
+            background: #0069d9;
+            transform: translateY(-3px);
+        }
+
+        /* MODALIDADES */
+        .modalidades-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 576px) {
+            .modalidades-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modalidade-card {
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modalidade-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .modalidade-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .modalidade-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .modalidade-card.selected {
+            background: linear-gradient(135deg, var(--primary), #ff8e53);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(255,107,53,0.3);
+        }
+
+        .modalidade-card.selected::before {
+            transform: scaleX(1);
+            background: white;
+        }
+
+        .modalidade-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .modalidade-card.selected .modalidade-icon {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .modalidade-card h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .modalidade-card p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .modalidade-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            background: rgba(255,107,53,0.1);
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 30px 30px 20px;
+            border-bottom: 2px solid #f1f3f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: #f8f9fa;
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+
+        .form-control.select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23636e72' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 2px solid #f1f3f5;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .summary-value {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* LOADING */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            opacity: 0.5;
+        }
+
+        .empty-state h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .empty-state p {
+            margin: 5px 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 992px) {
+            .schedule-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .schedule-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .calendar-grid {
+                gap: 5px;
+            }
+            
+            .calendar-day {
+                padding: 15px 2px;
+                font-size: 0.9rem;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .schedule-card {
+                padding: 20px;
+            }
+            
+            .calendar-day {
+                padding: 10px 2px;
+                font-size: 0.8rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* NOTIFICATION PANEL */
+        .notification-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+            z-index: 1001;
+            transition: right 0.3s ease;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .notification-panel.active {
+            right: 0;
+        }
+
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .notification-overlay.active {
+            display: block;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f5;
+        }
+
+        .notification-header h3 {
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .notification-item:hover {
+            background: #e9ecef;
+            transform: translateX(-5px);
+        }
+
+        .notification-item.unread {
+            background: white;
+            border-left-color: var(--info);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin: 0;
+        }
+
+        .mark-all-read {
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION OVERLAY -->
+    <div class="notification-overlay" id="notificationOverlay"></div>
+    
+    <!-- NOTIFICATION PANEL -->
+    <div class="notification-panel" id="notificationPanel">
+        <div class="notification-header">
+            <h3><i class="fas fa-bell"></i> Notificações</h3>
+            <button class="close-modal" onclick="toggleNotifications()">&times;</button>
+        </div>
+        
+        <div id="notificationsList">
+            <!-- Notificações serão carregadas aqui -->
+        </div>
+        
+        <div class="empty-state" id="emptyNotifications">
+            <i class="fas fa-bell-slash"></i>
+            <h4>Nenhuma notificação</h4>
+            <p>Você está em dia com suas atividades!</p>
+        </div>
+        
+        <button class="mark-all-read" onclick="markAllAsRead()">
+            <i class="fas fa-check-double"></i> Marcar todas como lidas
+        </button>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="schedule-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="user-profile-sidebar">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name" id="sidebarUserName">Carregando...</div>
+                <div class="user-plan" id="sidebarUserPlan">Plano</div>
+                <div style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <i class="fas fa-circle" style="color: #4caf50;"></i> 
+                    <span id="sidebarUserStatus">Ativo</span>
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 5px; opacity: 0.6;" id="sidebarUserExpiry">
+                    Válido até 31/12/2024
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i> Meu Perfil
+                </a>
+                <a href="schedule.html" class="nav-item active">
+                    <i class="fas fa-calendar"></i> Agendamentos
+                    <span class="badge" id="scheduleBadge">0</span>
+                </a>
+                <a href="payments.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i> Pagamentos
+                </a>
+                <a href="workouts.html" class="nav-item">
+                    <i class="fas fa-dumbbell"></i> Meus Treinos
+                </a>
+                <a href="progress.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i> Progresso
+                </a>
+                <a href="../index.html" class="nav-item">
+                    <i class="fas fa-external-link-alt"></i> Site Principal
+                </a>
+            </nav>
+
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair da Conta
+            </button>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div class="schedule-header">
+                <div class="header-left">
+                    <h1>Agendamentos</h1>
+                    <div class="header-subtitle">
+                        <a href="dashboard.html" class="back-to-dashboard">
+                            <i class="fas fa-arrow-left"></i> Voltar para Dashboard
+                        </a>
+                        <span>•</span>
+                        <span>Gerencie suas aulas e atividades</span>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="notifications">
+                        <button class="notification-btn" onclick="toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <div class="notification-badge" id="notificationBadge">3</div>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="openNewScheduleModal()">
+                        <i class="fas fa-plus"></i> Novo Agendamento
+                    </button>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-value" id="confirmedCount">0</div>
+                    <div class="stat-label">Confirmados</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="pendingCount">0</div>
+                    <div class="stat-label">Pendentes</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="stat-value" id="monthlyClasses">0</div>
+                    <div class="stat-label">Aulas este mês</div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT GRID -->
+            <div class="schedule-content">
+                <!-- LEFT COLUMN -->
+                <div>
+                    <!-- CALENDÁRIO -->
+                    <div class="calendar-container">
+                        <div class="section-header">
+                            <h2><i class="fas fa-calendar-alt"></i> Calendário</h2>
+                            <a href="#" class="see-all" onclick="viewAllSchedules()">
+                                Ver tudo <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="calendar-navigation">
+                            <button class="calendar-nav-btn" onclick="changeMonth(-1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="calendar-title" id="calendarTitle">
+                                Carregando...
+                            </div>
+                            <button class="calendar-nav-btn" onclick="changeMonth(1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendário gerado via JavaScript -->
+                        </div>
+                        
+                        <div class="time-slots">
+                            <div class="time-header">
+                                <h3><i class="fas fa-clock"></i> Horários disponíveis</h3>
+                                <div class="selected-date" id="selectedDate">Hoje</div>
+                            </div>
+                            <div class="time-grid" id="timeSlots">
+                                <!-- Horários gerados dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRÓXIMAS AULAS -->
+                    <div class="schedule-card">
+                        <div class="section-header">
+                            <h2><i class="fas fa-calendar-day"></i> Próximas Aulas</h2>
+                            <a href="#" class="see-all" onclick="viewUpcomingClasses()">
+                                Ver todas <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="classes-list" id="upcomingClasses">
+                            <!-- Aulas carregadas dinamicamente -->
+                        </div>
+                        
+                        <div class="empty-state" id="emptyUpcoming">
+                            <i class="fas fa-calendar-times"></i>
+                            <h4>Nenhuma aula agendada</h4>
+                            <p>Agende sua primeira aula para começar!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="sidebar-actions">
+                    <!-- MODALIDADES -->
+                    <div class="schedule-card">
+                        <div class="section-header">
+                            <h2><i class="fas fa-dumbbell"></i> Modalidades</h2>
+                        </div>
+                        
+                        <div class="modalidades-grid" id="modalidadesGrid">
+                            <!-- Carregado via JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- HISTÓRICO RECENTE -->
+                    <div class="schedule-card">
+                        <div class="section-header">
+                            <h2><i class="fas fa-history"></i> Histórico Recente</h2>
+                        </div>
+                        
+                        <div class="classes-list" id="recentHistory">
+                            <!-- Histórico carregado dinamicamente -->
+                        </div>
+                        
+                        <div class="empty-state" id="emptyHistory">
+                            <i class="fas fa-history"></i>
+                            <p>Nenhuma aula realizada</p>
+                        </div>
+                    </div>
+                    
+                    <!-- DICAS -->
+                    <div class="schedule-card" style="background: linear-gradient(135deg, var(--primary), #ff8e53); color: white;">
+                        <div class="section-header" style="border-bottom-color: rgba(255,255,255,0.2);">
+                            <h2 style="color: white;"><i class="fas fa-lightbulb"></i> Dica do Dia</h2>
+                        </div>
+                        <div style="padding: 15px 0;">
+                            <h4 style="margin-bottom: 10px;">Mantenha a consistência!</h4>
+                            <p style="opacity: 0.9; margin-bottom: 15px;">
+                                Agende suas aulas com antecedência para garantir seu horário preferido.
+                            </p>
+                            <div style="font-size: 0.85rem; opacity: 0.8;">
+                                <i class="fas fa-star"></i> Dica: Treine pelo menos 3x por semana para melhores resultados
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE NOVO AGENDAMENTO -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> Novo Agendamento</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div id="modalContent">
+                    <!-- Conteúdo dinâmico -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALHES -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Detalhes do Agendamento</h3>
+                <button class="close-modal" onclick="closeDetailModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div id="detailContent">
+                    <!-- Detalhes carregados dinamicamente -->
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+                <button class="btn-primary" id="detailActionBtn">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // ==================== SISTEMA DE DADOS ====================
+        class AcademiaDB {
+            constructor() {
+                this.initDB();
+            }
+            
+            initDB() {
+                // Inicializar dados no localStorage
+                if (!localStorage.getItem('academia_schedules')) {
+                    localStorage.setItem('academia_schedules', JSON.stringify([]));
+                }
+                
+                if (!localStorage.getItem('academia_notifications')) {
+                    const notifications = [
+                        {
+                            id: 1,
+                            title: 'Aula confirmada!',
+                            message: 'Sua aula de CrossFit às 19:00 foi confirmada',
+                            type: 'success',
+                            read: false,
+                            date: new Date().toISOString()
+                        },
+                        {
+                            id: 2,
+                            title: 'Lembrete de aula',
+                            message: 'Você tem aula de Musculação amanhã às 08:00',
+                            type: 'info',
+                            read: false,
+                            date: new Date(Date.now() - 3600000).toISOString()
+                        },
+                        {
+                            id: 3,
+                            title: 'Novo horário disponível',
+                            message: 'Novos horários para Pilates disponíveis',
+                            type: 'warning',
+                            read: false,
+                            date: new Date(Date.now() - 7200000).toISOString()
+                        }
+                    ];
+                    localStorage.setItem('academia_notifications', JSON.stringify(notifications));
+                }
+            }
+            
+            // ==================== AGENDAMENTOS ====================
+            getSchedules() {
+                return JSON.parse(localStorage.getItem('academia_schedules') || '[]');
+            }
+            
+            saveSchedule(schedule) {
+                const schedules = this.getSchedules();
+                schedule.id = Date.now(); // ID único
+                schedule.createdAt = new Date().toISOString();
+                schedule.status = 'pending';
+                schedules.push(schedule);
+                localStorage.setItem('academia_schedules', JSON.stringify(schedules));
+                return schedule;
+            }
+            
+            updateSchedule(id, updates) {
+                const schedules = this.getSchedules();
+                const index = schedules.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    schedules[index] = { ...schedules[index], ...updates };
+                    localStorage.setItem('academia_schedules', JSON.stringify(schedules));
+                    return schedules[index];
+                }
+                return null;
+            }
+            
+            deleteSchedule(id) {
+                const schedules = this.getSchedules();
+                const filtered = schedules.filter(s => s.id !== id);
+                localStorage.setItem('academia_schedules', JSON.stringify(filtered));
+                return true;
+            }
+            
+            getScheduleById(id) {
+                const schedules = this.getSchedules();
+                return schedules.find(s => s.id === id);
+            }
+            
+            getSchedulesByDate(date) {
+                const schedules = this.getSchedules();
+                return schedules.filter(s => s.date === date);
+            }
+            
+            // ==================== NOTIFICAÇÕES ====================
+            getNotifications() {
+                return JSON.parse(localStorage.getItem('academia_notifications') || '[]');
+            }
+            
+            addNotification(notification) {
+                const notifications = this.getNotifications();
+                notification.id = Date.now();
+                notification.date = new Date().toISOString();
+                notification.read = false;
+                notifications.unshift(notification);
+                localStorage.setItem('academia_notifications', JSON.stringify(notifications));
+                return notification;
+            }
+            
+            markNotificationAsRead(id) {
+                const notifications = this.getNotifications();
+                const notification = notifications.find(n => n.id === id);
+                if (notification) {
+                    notification.read = true;
+                    localStorage.setItem('academia_notifications', JSON.stringify(notifications));
+                }
+            }
+            
+            markAllAsRead() {
+                const notifications = this.getNotifications();
+                notifications.forEach(n => n.read = true);
+                localStorage.setItem('academia_notifications', JSON.stringify(notifications));
+            }
+            
+            getUnreadCount() {
+                const notifications = this.getNotifications();
+                return notifications.filter(n => !n.read).length;
+            }
+            
+            // ==================== MOCK DATA ====================
+            getModalidades() {
+                return [
+                    {
+                        id: 1,
+                        nome: 'Musculação',
+                        icone: 'fas fa-weight-hanging',
+                        descricao: 'Equipamentos modernos',
+                        nivel: 'Todos os níveis',
+                        duracao: '60 min',
+                        capacidade: 20
+                    },
+                    {
+                        id: 2,
+                        nome: 'CrossFit',
+                        icone: 'fas fa-running',
+                        descricao: 'Alta intensidade',
+                        nivel: 'Avançado',
+                        duracao: '45 min',
+                        capacidade: 15
+                    },
+                    {
+                        id: 3,
+                        nome: 'Pilates',
+                        icone: 'fas fa-spa',
+                        descricao: 'Alongamento e força',
+                        nivel: 'Iniciante',
+                        duracao: '50 min',
+                        capacidade: 12
+                    },
+                    {
+                        id: 4,
+                        nome: 'Spinning',
+                        icone: 'fas fa-bicycle',
+                        descricao: 'Cardio intenso',
+                        nivel: 'Intermediário',
+                        duracao: '45 min',
+                        capacidade: 25
+                    },
+                    {
+                        id: 5,
+                        nome: 'Zumba',
+                        icone: 'fas fa-music',
+                        descricao: 'Dança fitness',
+                        nivel: 'Todos os níveis',
+                        duracao: '60 min',
+                        capacidade: 30
+                    },
+                    {
+                        id: 6,
+                        nome: 'Yoga',
+                        icone: 'fas fa-peace',
+                        descricao: 'Relaxamento',
+                        nivel: 'Todos os níveis',
+                        duracao: '60 min',
+                        capacidade: 18
+                    }
+                ];
+            }
+            
+            getInstructors() {
+                return [
+                    { id: 1, nome: 'Carlos Silva', especialidade: 'CrossFit', foto: '👨‍🏫' },
+                    { id: 2, nome: 'Ana Santos', especialidade: 'Musculação', foto: '👩‍🏫' },
+                    { id: 3, nome: 'Mariana Costa', especialidade: 'Pilates', foto: '👩‍🏫' },
+                    { id: 4, nome: 'Ricardo Alves', especialidade: 'Spinning', foto: '👨‍🏫' },
+                    { id: 5, nome: 'Beatriz Lima', especialidade: 'Zumba', foto: '👩‍🏫' }
+                ];
+            }
+            
+            getAvailableTimes(date) {
+                const day = new Date(date).getDay();
+                let times = [];
+                
+                if (day >= 1 && day <= 5) { // Segunda a Sexta
+                    times = [
+                        { time: '06:00', available: true, instructor: 1 },
+                        { time: '07:00', available: true, instructor: 1 },
+                        { time: '08:00', available: true, instructor: 2 },
+                        { time: '09:00', available: true, instructor: 2 },
+                        { time: '10:00', available: false, instructor: null },
+                        { time: '11:00', available: true, instructor: 3 },
+                        { time: '17:00', available: true, instructor: 4 },
+                        { time: '18:00', available: false, instructor: null },
+                        { time: '19:00', available: true, instructor: 5 },
+                        { time: '20:00', available: true, instructor: 1 },
+                        { time: '21:00', available: true, instructor: 2 }
+                    ];
+                } else if (day === 6) { // Sábado
+                    times = [
+                        { time: '08:00', available: true, instructor: 2 },
+                        { time: '09:00', available: true, instructor: 3 },
+                        { time: '10:00', available: true, instructor: 4 },
+                        { time: '11:00', available: true, instructor: 5 }
+                    ];
+                } else { // Domingo
+                    times = [];
+                }
+                
+                // Verificar horários já agendados
+                const existingSchedules = this.getSchedulesByDate(date);
+                times.forEach(timeSlot => {
+                    if (existingSchedules.some(s => s.time === timeSlot.time)) {
+                        timeSlot.available = false;
+                    }
+                });
+                
+                return times;
+            }
+        }
+
+        // ==================== APLICAÇÃO ====================
+        const db = new AcademiaDB();
+        let currentDate = new Date();
+        let selectedDate = new Date();
+        let selectedSchedule = null;
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏋️‍♂️ Sistema de Agendamentos carregando...');
+            
+            // Verificar autenticação
+            const userData = localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user');
+            
+            if (!userData) {
+                window.location.href = '../login/index.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userData);
+                console.log('✅ Usuário autenticado:', user.nome);
+                
+                // Atualizar interface
+                updateUserInterface(user);
+                initCalendar();
+                loadUserSchedules(user);
+                loadModalidades();
+                loadNotifications();
+                loadStats();
+                
+            } catch (error) {
+                console.error('Erro ao carregar usuário:', error);
+                window.location.href = '../login/index.html';
+            }
+        });
+
+        // ==================== INTERFACE DO USUÁRIO ====================
+        function updateUserInterface(user) {
+            // Sidebar
+            document.getElementById('sidebarUserName').textContent = user.nome || 'Usuário';
+            document.getElementById('sidebarUserPlan').textContent = `Plano ${user.plano || 'Premium'}`;
+            
+            // Avatar com iniciais
+            if (user.nome) {
+                const initials = user.nome.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userAvatar').innerHTML = `<span style="font-size: 1.8rem; font-weight: 600;">${initials}</span>`;
+            }
+            
+            // Status do plano
+            const expiry = user.planoExpiry ? new Date(user.planoExpiry) : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+            document.getElementById('sidebarUserExpiry').textContent = `Válido até ${expiry.toLocaleDateString('pt-BR')}`;
+        }
+
+        // ==================== CALENDÁRIO ====================
+        function initCalendar() {
+            updateCalendar();
+            updateTimeSlots();
+            selectDate(new Date());
+        }
+
+        function updateCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Atualizar título
+            const monthNames = [
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
+            
+            document.getElementById('calendarTitle').textContent = `${monthNames[month]} ${year}`;
+            
+            // Calcular datas
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const firstDayOfWeek = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+            const today = new Date();
+            
+            // Criar grid
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            // Cabeçalhos
+            const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            weekDays.forEach(day => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day-header';
+                div.textContent = day;
+                calendarGrid.appendChild(div);
+            });
+            
+            // Dias vazios antes do primeiro dia
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const div = document.createElement('div');
+                div.className = 'calendar-day other-month';
+                calendarGrid.appendChild(div);
+            }
+            
+            // Dias do mês
+            for (let day = 1; day <= totalDays; day++) {
+                const date = new Date(year, month, day);
+                const div = document.createElement('div');
+                div.className = 'calendar-day';
+                div.textContent = day;
+                div.dataset.date = date.toISOString().split('T')[0];
+                
+                // Verificar se é hoje
+                if (date.toDateString() === today.toDateString()) {
+                    div.classList.add('today');
+                }
+                
+                // Verificar se tem agendamentos
+                const hasEvents = db.getSchedulesByDate(date.toISOString().split('T')[0]).length > 0;
+                if (hasEvents) {
+                    div.classList.add('has-events');
+                }
+                
+                // Verificar se é passado
+                if (date < new Date().setHours(0, 0, 0, 0)) {
+                    div.classList.add('disabled');
+                }
+                
+                // Evento de clique
+                div.addEventListener('click', () => {
+                    if (!div.classList.contains('disabled')) {
+                        selectDate(date);
+                    }
+                });
+                
+                calendarGrid.appendChild(div);
+            }
+        }
+
+        function selectDate(date) {
+            selectedDate = new Date(date);
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.classList.remove('active');
+            });
+            
+            // Adicionar seleção
+            const dateStr = selectedDate.toISOString().split('T')[0];
+            const selectedDay = document.querySelector(`[data-date="${dateStr}"]`);
+            if (selectedDay) {
+                selectedDay.classList.add('active');
+            }
+            
+            // Atualizar texto da data
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+            
+            let dateText = '';
+            if (selectedDate.toDateString() === today.toDateString()) {
+                dateText = 'Hoje';
+            } else if (selectedDate.toDateString() === tomorrow.toDateString()) {
+                dateText = 'Amanhã';
+            } else if (selectedDate.toDateString() === yesterday.toDateString()) {
+                dateText = 'Ontem';
+            } else {
+                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                dateText = selectedDate.toLocaleDateString('pt-BR', options);
+            }
+            
+            document.getElementById('selectedDate').textContent = dateText;
+            updateTimeSlots();
+        }
+
+        function updateTimeSlots() {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            timeSlotsContainer.innerHTML = '';
+            
+            const dateStr = selectedDate.toISOString().split('T')[0];
+            const times = db.getAvailableTimes(dateStr);
+            
+            if (times.length === 0) {
+                timeSlotsContainer.innerHTML = `
+                    <div style="grid-column: span 3; text-align: center; padding: 30px; color: var(--gray);">
+                        <i class="fas fa-calendar-times" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
+                        <p>Não há horários disponíveis para esta data</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            times.forEach(timeSlot => {
+                const div = document.createElement('div');
+                div.className = 'time-slot';
+                div.textContent = timeSlot.time;
+                
+                if (!timeSlot.available) {
+                    div.classList.add('unavailable');
+                } else {
+                    div.addEventListener('click', () => {
+                        // Remover seleção anterior
+                        document.querySelectorAll('.time-slot').forEach(slot => {
+                            slot.classList.remove('selected');
+                        });
+                        
+                        // Adicionar seleção
+                        div.classList.add('selected');
+                        openNewScheduleModalWithTime(timeSlot.time);
+                    });
+                }
+                
+                timeSlotsContainer.appendChild(div);
+            });
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            updateCalendar();
+            selectDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1));
+        }
+
+        // ==================== AGENDAMENTOS ====================
+        function loadUserSchedules(user) {
+            const schedules = db.getSchedules();
+            
+            // Filtrar agendamentos do usuário
+            const userSchedules = schedules.filter(s => s.userId === user.id);
+            
+            // Atualizar estatísticas
+            updateStats(userSchedules);
+            
+            // Carregar próximas aulas
+            loadUpcomingClasses(userSchedules);
+            
+            // Carregar histórico
+            loadRecentHistory(userSchedules);
+            
+            // Atualizar badge
+            document.getElementById('scheduleBadge').textContent = userSchedules.length;
+        }
+
+        function updateStats(schedules) {
+            const confirmed = schedules.filter(s => s.status === 'confirmed').length;
+            const pending = schedules.filter(s => s.status === 'pending').length;
+            const thisMonth = schedules.filter(s => {
+                const scheduleDate = new Date(s.date);
+                const now = new Date();
+                return scheduleDate.getMonth() === now.getMonth() && 
+                       scheduleDate.getFullYear() === now.getFullYear();
+            }).length;
+            
+            document.getElementById('confirmedCount').textContent = confirmed;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('monthlyClasses').textContent = thisMonth;
+        }
+
+        function loadUpcomingClasses(schedules) {
+            const container = document.getElementById('upcomingClasses');
+            const emptyState = document.getElementById('emptyUpcoming');
+            
+            // Filtrar próximas aulas (a partir de hoje)
+            const today = new Date().toISOString().split('T')[0];
+            const upcoming = schedules
+                .filter(s => s.date >= today)
+                .sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time))
+                .slice(0, 3);
+            
+            if (upcoming.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+            
+            upcoming.forEach(schedule => {
+                const div = document.createElement('div');
+                div.className = 'class-item';
+                
+                const date = new Date(schedule.date);
+                const dateStr = date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
+                
+                div.innerHTML = `
+                    <div class="class-info">
+                        <h4>${schedule.modality}</h4>
+                        <p>
+                            <i class="fas fa-calendar"></i> ${dateStr}
+                            <i class="fas fa-clock"></i> ${schedule.time}
+                            <i class="fas fa-user"></i> ${schedule.instructor}
+                        </p>
+                    </div>
+                    <div class="class-actions">
+                        <button class="btn-status ${schedule.status === 'confirmed' ? 'btn-confirm' : 'btn-pending'}">
+                            ${schedule.status === 'confirmed' ? 'Confirmado' : 'Pendente'}
+                        </button>
+                        <button class="btn-action btn-edit" onclick="viewScheduleDetails(${schedule.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-action btn-cancel" onclick="cancelSchedule(${schedule.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        function loadRecentHistory(schedules) {
+            const container = document.getElementById('recentHistory');
+            const emptyState = document.getElementById('emptyHistory');
+            
+            // Filtrar aulas passadas
+            const today = new Date().toISOString().split('T')[0];
+            const history = schedules
+                .filter(s => s.date < today)
+                .sort((a, b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time))
+                .slice(0, 3);
+            
+            if (history.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+            
+            history.forEach(schedule => {
+                const div = document.createElement('div');
+                div.className = 'class-item';
+                
+                const date = new Date(schedule.date);
+                const dateStr = date.toLocaleDateString('pt-BR');
+                
+                div.innerHTML = `
+                    <div class="class-info">
+                        <h4>${schedule.modality}</h4>
+                        <p>
+                            <i class="fas fa-calendar"></i> ${dateStr}
+                            <i class="fas fa-clock"></i> ${schedule.time}
+                        </p>
+                    </div>
+                    <div class="class-actions">
+                        <button class="btn-status ${schedule.status === 'confirmed' ? 'btn-confirm' : 'btn-canceled'}">
+                            Realizada
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        // ==================== MODALIDADES ====================
+        function loadModalidades() {
+            const container = document.getElementById('modalidadesGrid');
+            const modalidades = db.getModalidades();
+            
+            container.innerHTML = '';
+            
+            modalidades.forEach(modalidade => {
+                const div = document.createElement('div');
+                div.className = 'modalidade-card';
+                div.dataset.id = modalidade.id;
+                
+                div.innerHTML = `
+                    <span class="modalidade-tag">${modalidade.nivel}</span>
+                    <div class="modalidade-icon">
+                        <i class="${modalidade.icone}"></i>
+                    </div>
+                    <h4>${modalidade.nome}</h4>
+                    <p>${modalidade.descricao}</p>
+                    <p style="font-size: 0.8rem; margin-top: 8px;">
+                        <i class="fas fa-clock"></i> ${modalidade.duracao}
+                        <span style="margin: 0 5px;">•</span>
+                        <i class="fas fa-users"></i> ${modalidade.capacidade} vagas
+                    </p>
+                `;
+                
+                div.addEventListener('click', () => {
+                    selectModality(modalidade.id);
+                });
+                
+                container.appendChild(div);
+            });
+        }
+
+        function selectModality(id) {
+            // Remover seleção anterior
+            document.querySelectorAll('.modalidade-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Adicionar seleção
+            const card = document.querySelector(`[data-id="${id}"]`);
+            if (card) {
+                card.classList.add('selected');
+            }
+        }
+
+        // ==================== MODAIS ====================
+        function openNewScheduleModal(preSelectedTime = null) {
+            const modal = document.getElementById('scheduleModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div style="padding: 10px 0;">
+                    <h4 style="margin-bottom: 20px; color: var(--dark);">
+                        <i class="fas fa-plus-circle"></i> Criar Novo Agendamento
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-dumbbell"></i> Modalidade</label>
+                        <select class="form-control select" id="modalModality">
+                            <option value="">Selecione uma modalidade</option>
+                            ${db.getModalidades().map(m => 
+                                `<option value="${m.id}">${m.nome} - ${m.descricao}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-day"></i> Data</label>
+                        <input type="date" id="modalDate" class="form-control" 
+                               min="${new Date().toISOString().split('T')[0]}"
+                               value="${selectedDate.toISOString().split('T')[0]}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Horário</label>
+                        <select class="form-control select" id="modalTime">
+                            <option value="">Selecione um horário</option>
+                            <!-- Horários serão preenchidos dinamicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tie"></i> Instrutor</label>
+                        <select class="form-control select" id="modalInstructor">
+                            <option value="">Será atribuído automaticamente</option>
+                            ${db.getInstructors().map(i => 
+                                `<option value="${i.id}">${i.nome} - ${i.especialidade}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> Observações (opcional)</label>
+                        <textarea id="modalNotes" class="form-control" rows="3" 
+                                  placeholder="Alguma observação especial..."></textarea>
+                    </div>
+                    
+                    <div class="summary-card" id="summaryCard" style="display: none;">
+                        <h4 style="margin-bottom: 15px; color: var(--dark);">
+                            <i class="fas fa-check-circle"></i> Resumo do Agendamento
+                        </h4>
+                        <div id="summaryDetails"></div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeModal()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button class="btn-primary" onclick="confirmSchedule()" id="confirmScheduleBtn" disabled>
+                            <i class="fas fa-calendar-check"></i> Confirmar Agendamento
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Configurar data
+            document.getElementById('modalDate').value = selectedDate.toISOString().split('T')[0];
+            
+            // Configurar horário pré-selecionado
+            if (preSelectedTime) {
+                setTimeout(() => {
+                    document.getElementById('modalTime').value = preSelectedTime;
+                    updateSummary();
+                }, 100);
+            }
+            
+            // Carregar horários disponíveis
+            loadModalTimes();
+            
+            // Event listeners
+            document.getElementById('modalDate').addEventListener('change', loadModalTimes);
+            document.getElementById('modalModality').addEventListener('change', updateSummary);
+            document.getElementById('modalTime').addEventListener('change', updateSummary);
+            document.getElementById('modalInstructor').addEventListener('change', updateSummary);
+            document.getElementById('modalNotes').addEventListener('input', updateSummary);
+            
+            modal.style.display = 'flex';
+        }
+
+        function openNewScheduleModalWithTime(time) {
+            openNewScheduleModal(time);
+        }
+
+        function loadModalTimes() {
+            const date = document.getElementById('modalDate').value;
+            const timeSelect = document.getElementById('modalTime');
+            
+            if (!date) {
+                timeSelect.innerHTML = '<option value="">Selecione uma data primeiro</option>';
+                return;
+            }
+            
+            const times = db.getAvailableTimes(date);
+            
+            if (times.length === 0) {
+                timeSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
+                return;
+            }
+            
+            timeSelect.innerHTML = '<option value="">Selecione um horário</option>' +
+                times.map(t => 
+                    `<option value="${t.time}" ${t.available ? '' : 'disabled'}>
+                        ${t.time} ${t.available ? '✅' : '❌ (Indisponível)'}
+                    </option>`
+                ).join('');
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const modalityId = document.getElementById('modalModality').value;
+            const date = document.getElementById('modalDate').value;
+            const time = document.getElementById('modalTime').value;
+            const instructorId = document.getElementById('modalInstructor').value;
+            const notes = document.getElementById('modalNotes').value;
+            
+            const summaryCard = document.getElementById('summaryCard');
+            const summaryDetails = document.getElementById('summaryDetails');
+            const confirmBtn = document.getElementById('confirmScheduleBtn');
+            
+            if (modalityId && date && time) {
+                const modality = db.getModalidades().find(m => m.id == modalityId);
+                const dateObj = new Date(date);
+                const dateStr = dateObj.toLocaleDateString('pt-BR', { 
+                    weekday: 'long', 
+                    day: 'numeric', 
+                    month: 'long' 
+                });
+                
+                let instructor = 'A definir';
+                if (instructorId) {
+                    const instructorObj = db.getInstructors().find(i => i.id == instructorId);
+                    instructor = instructorObj ? instructorObj.nome : 'A definir';
+                }
+                
+                summaryDetails.innerHTML = `
+                    <div class="summary-item">
+                        <span class="summary-label">Modalidade:</span>
+                        <span class="summary-value">${modality.nome}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Data:</span>
+                        <span class="summary-value">${dateStr}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Horário:</span>
+                        <span class="summary-value">${time}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Instrutor:</span>
+                        <span class="summary-value">${instructor}</span>
+                    </div>
+                    ${notes ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Observações:</span>
+                        <span class="summary-value">${notes}</span>
+                    </div>
+                    ` : ''}
+                `;
+                
+                summaryCard.style.display = 'block';
+                confirmBtn.disabled = false;
+            } else {
+                summaryCard.style.display = 'none';
+                confirmBtn.disabled = true;
+            }
+        }
+
+        function confirmSchedule() {
+            const modalityId = document.getElementById('modalModality').value;
+            const date = document.getElementById('modalDate').value;
+            const time = document.getElementById('modalTime').value;
+            const instructorId = document.getElementById('modalInstructor').value;
+            const notes = document.getElementById('modalNotes').value;
+            
+            if (!modalityId || !date || !time) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            // Obter dados do usuário
+            const userData = localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user');
+            if (!userData) {
+                window.location.href = '../login/index.html';
+                return;
+            }
+            
+            const user = JSON.parse(userData);
+            
+            // Obter modalidade
+            const modality = db.getModalidades().find(m => m.id == modalityId);
+            const instructor = instructorId ? 
+                db.getInstructors().find(i => i.id == instructorId)?.nome : 
+                'A definir';
+            
+            // Criar agendamento
+            const schedule = {
+                userId: user.id,
+                modality: modality.nome,
+                modalityId: modality.id,
+                date: date,
+                time: time,
+                instructor: instructor,
+                notes: notes,
+                status: 'pending'
+            };
+            
+            // Salvar no banco de dados
+            const savedSchedule = db.saveSchedule(schedule);
+            
+            // Adicionar notificação
+            db.addNotification({
+                title: 'Agendamento realizado!',
+                message: `Sua aula de ${modality.nome} para ${date} às ${time} foi agendada`,
+                type: 'success'
+            });
+            
+            // Mostrar confirmação
+            showToast('Agendamento realizado com sucesso!', 'success');
+            
+            // Atualizar interface
+            closeModal();
+            loadUserSchedules(user);
+            loadNotifications();
+            
+            // Recarregar horários no calendário
+            updateTimeSlots();
+        }
+
+        function viewScheduleDetails(id) {
+            const schedule = db.getScheduleById(id);
+            if (!schedule) {
+                showToast('Agendamento não encontrado', 'error');
+                return;
+            }
+            
+            selectedSchedule = schedule;
+            
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('detailContent');
+            const actionBtn = document.getElementById('detailActionBtn');
+            
+            const date = new Date(schedule.date);
+            const dateStr = date.toLocaleDateString('pt-BR', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            let statusClass = 'btn-pending';
+            let statusText = 'Pendente';
+            if (schedule.status === 'confirmed') {
+                statusClass = 'btn-confirm';
+                statusText = 'Confirmado';
+            } else if (schedule.status === 'canceled') {
+                statusClass = 'btn-canceled';
+                statusText = 'Cancelado';
+            }
+            
+            content.innerHTML = `
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="summary-label">Modalidade:</span>
+                        <span class="summary-value">${schedule.modality}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Data:</span>
+                        <span class="summary-value">${dateStr}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Horário:</span>
+                        <span class="summary-value">${schedule.time}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Instrutor:</span>
+                        <span class="summary-value">${schedule.instructor}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Status:</span>
+                        <span class="summary-value">
+                            <button class="btn-status ${statusClass}" style="pointer-events: none;">
+                                ${statusText}
+                            </button>
+                        </span>
+                    </div>
+                    ${schedule.notes ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Observações:</span>
+                        <span class="summary-value">${schedule.notes}</span>
+                    </div>
+                    ` : ''}
+                    <div class="summary-item">
+                        <span class="summary-label">Agendado em:</span>
+                        <span class="summary-value">${new Date(schedule.createdAt).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Configurar botão de ação
+            if (schedule.status === 'pending') {
+                actionBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+                actionBtn.onclick = () => editSchedule(id);
+            } else if (schedule.status === 'confirmed') {
+                actionBtn.innerHTML = '<i class="fas fa-times"></i> Cancelar';
+                actionBtn.onclick = () => cancelSchedule(id);
+            } else {
+                actionBtn.style.display = 'none';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function editSchedule(id) {
+            closeDetailModal();
+            // Implementar edição
+            showToast('Funcionalidade de edição em desenvolvimento', 'info');
+        }
+
+        function cancelSchedule(id) {
+            if (confirm('Tem certeza que deseja cancelar este agendamento?')) {
+                const schedule = db.getScheduleById(id);
+                
+                if (schedule) {
+                    // Atualizar status
+                    db.updateSchedule(id, { status: 'canceled' });
+                    
+                    // Adicionar notificação
+                    db.addNotification({
+                        title: 'Agendamento cancelado',
+                        message: `Sua aula de ${schedule.modality} para ${schedule.date} foi cancelada`,
+                        type: 'warning'
+                    });
+                    
+                    // Mostrar confirmação
+                    showToast('Agendamento cancelado com sucesso!', 'success');
+                    
+                    // Obter usuário atual
+                    const userData = localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user');
+                    if (userData) {
+                        const user = JSON.parse(userData);
+                        loadUserSchedules(user);
+                        loadNotifications();
+                    }
+                    
+                    closeDetailModal();
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('scheduleModal').style.display = 'none';
+            selectedSchedule = null;
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+            selectedSchedule = null;
+        }
+
+        // ==================== NOTIFICAÇÕES ====================
+        function loadNotifications() {
+            const notifications = db.getNotifications();
+            const container = document.getElementById('notificationsList');
+            const emptyState = document.getElementById('emptyNotifications');
+            
+            if (notifications.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+            
+            notifications.forEach(notification => {
+                const div = document.createElement('div');
+                div.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                div.dataset.id = notification.id;
+                
+                const time = new Date(notification.date);
+                const timeStr = time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                
+                div.innerHTML = `
+                    <div class="notification-title">
+                        <span>${notification.title}</span>
+                        <span class="notification-time">${timeStr}</span>
+                    </div>
+                    <p class="notification-message">${notification.message}</p>
+                `;
+                
+                div.addEventListener('click', () => {
+                    db.markNotificationAsRead(notification.id);
+                    loadNotifications();
+                    updateNotificationBadge();
+                });
+                
+                container.appendChild(div);
+            });
+            
+            updateNotificationBadge();
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            const overlay = document.getElementById('notificationOverlay');
+            
+            panel.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            if (panel.classList.contains('active')) {
+                // Marcar todas como lidas ao abrir
+                db.markAllAsRead();
+                loadNotifications();
+            }
+        }
+
+        function markAllAsRead() {
+            db.markAllAsRead();
+            loadNotifications();
+        }
+
+        function updateNotificationBadge() {
+            const count = db.getUnreadCount();
+            const badge = document.getElementById('notificationBadge');
+            
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // ==================== UTILIDADES ====================
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: '#00b894',
+                error: '#d63031',
+                warning: '#fdcb6e',
+                info: '#0984e3'
+            };
+            
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: colors[type] || colors.info,
+                stopOnFocus: true,
+                style: {
+                    borderRadius: "10px",
+                    fontWeight: "600"
+                }
+            }).showToast();
+        }
+
+        function loadStats() {
+            const userData = localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                const schedules = db.getSchedules().filter(s => s.userId === user.id);
+                updateStats(schedules);
+            }
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair da sua conta?')) {
+                // Limpar storage
+                localStorage.removeItem('academia_user');
+                sessionStorage.removeItem('academia_user');
+                
+                // Redirecionar para login
+                window.location.href = '../login/index.html';
+            }
+        }
+
+        // Funções auxiliares
+        function viewAllSchedules() {
+            showToast('Visualizando todos os agendamentos', 'info');
+            // Implementar visualização completa
+        }
+
+        function viewUpcomingClasses() {
+            showToast('Visualizando todas as próximas aulas', 'info');
+            // Implementar visualização completa
+        }
+
+        // Inicializar notificações
+        loadNotifications();
+    </script>
+</body>
+</html>

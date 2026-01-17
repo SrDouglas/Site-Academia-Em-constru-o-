@@ -5,27 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Área do Aluno</title>
     <link rel="stylesheet" href="../css/area-aluno.css">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ESTILOS DO DASHBOARD */
         .dashboard-container {
             display: grid;
             grid-template-columns: 250px 1fr;
             min-height: 100vh;
         }
-
+        
         .sidebar {
             background: var(--dark);
             color: white;
-            padding: 20px 0;
+            padding: 0;
         }
-
+        
         .user-profile {
             text-align: center;
-            padding: 20px;
+            padding: 30px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
         }
-
+        
         .user-avatar {
             width: 80px;
             height: 80px;
@@ -33,20 +35,19 @@
             border: 3px solid var(--primary);
             margin: 0 auto 15px;
             overflow: hidden;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
         }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
+        
         .user-name {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 5px;
         }
-
+        
         .user-plan {
             background: var(--primary);
             color: white;
@@ -56,11 +57,11 @@
             display: inline-block;
             margin-top: 5px;
         }
-
+        
         .sidebar-nav {
             padding: 20px 0;
         }
-
+        
         .nav-item {
             display: flex;
             align-items: center;
@@ -70,19 +71,24 @@
             text-decoration: none;
             transition: all 0.3s;
             border-left: 3px solid transparent;
+            font-size: 0.95rem;
         }
-
+        
         .nav-item:hover, .nav-item.active {
             background: rgba(255,255,255,0.1);
             color: white;
             border-left-color: var(--primary);
         }
-
+        
         .nav-item i {
             width: 20px;
             text-align: center;
         }
-
+        
+        .nav-item.active {
+            background: rgba(255,107,53,0.1);
+        }
+        
         .logout-btn {
             margin: 20px;
             display: flex;
@@ -90,56 +96,62 @@
             gap: 10px;
             padding: 12px 20px;
             background: rgba(220, 53, 69, 0.2);
-            color: #dc3545;
-            border: none;
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.3);
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
             width: calc(100% - 40px);
+            font-size: 0.9rem;
         }
-
+        
         .logout-btn:hover {
             background: #dc3545;
             color: white;
         }
-
+        
         .main-content {
             padding: 30px;
             background: #f8f9fa;
+            min-height: 100vh;
         }
-
+        
         .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-
+        
         .welcome-message h1 {
             color: var(--dark);
             margin-bottom: 5px;
+            font-size: 1.8rem;
         }
-
+        
         .welcome-message p {
             color: var(--gray);
         }
-
+        
         .current-date {
             background: white;
             padding: 10px 20px;
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
             font-weight: 600;
+            color: var(--dark);
         }
-
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-
+        
         .stat-card {
             background: white;
             padding: 25px;
@@ -148,8 +160,13 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            transition: transform 0.3s;
         }
-
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
         .stat-icon {
             width: 60px;
             height: 60px;
@@ -159,37 +176,39 @@
             justify-content: center;
             font-size: 1.8rem;
         }
-
+        
         .stat-1 .stat-icon { background: #e3f2fd; color: #2196f3; }
         .stat-2 .stat-icon { background: #f3e5f5; color: #9c27b0; }
         .stat-3 .stat-icon { background: #e8f5e9; color: #4caf50; }
         .stat-4 .stat-icon { background: #fff3e0; color: #ff9800; }
-
+        
         .stat-info h3 {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--gray);
             margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-
+        
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
             color: var(--dark);
         }
-
+        
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 20px;
         }
-
+        
         .dashboard-card {
             background: white;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-
+        
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -198,26 +217,34 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
-
+        
         .card-header h2 {
             font-size: 1.3rem;
             color: var(--dark);
             margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-
+        
         .see-all {
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
+            transition: all 0.3s;
         }
-
+        
+        .see-all:hover {
+            color: var(--secondary);
+        }
+        
         .attendance-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-
+        
         .attendance-item {
             display: flex;
             justify-content: space-between;
@@ -225,21 +252,21 @@
             padding: 15px 0;
             border-bottom: 1px solid #f5f5f5;
         }
-
+        
         .attendance-item:last-child {
             border-bottom: none;
         }
-
+        
         .attendance-date {
             font-weight: 600;
             color: var(--dark);
         }
-
+        
         .attendance-time {
             color: var(--gray);
             font-size: 0.9rem;
         }
-
+        
         .attendance-duration {
             background: #e8f5e9;
             color: #4caf50;
@@ -248,7 +275,7 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-
+        
         .upcoming-classes .class-item {
             display: flex;
             justify-content: space-between;
@@ -256,18 +283,23 @@
             padding: 15px 0;
             border-bottom: 1px solid #f5f5f5;
         }
-
+        
+        .class-item:last-child {
+            border-bottom: none;
+        }
+        
         .class-info h4 {
             margin: 0 0 5px 0;
             color: var(--dark);
+            font-size: 1rem;
         }
-
+        
         .class-info p {
             margin: 0;
             color: var(--gray);
             font-size: 0.9rem;
         }
-
+        
         .class-status {
             background: var(--primary);
             color: white;
@@ -276,22 +308,22 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-
+        
         .class-status.confirmed {
             background: #4caf50;
         }
-
+        
         .class-status.pending {
             background: #ff9800;
         }
-
+        
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-top: 20px;
         }
-
+        
         .action-btn {
             display: flex;
             flex-direction: column;
@@ -304,32 +336,67 @@
             text-decoration: none;
             color: var(--dark);
             transition: all 0.3s;
+            text-align: center;
         }
-
-        .action-btn i {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
+        
         .action-btn:hover {
             background: var(--primary);
             border-color: var(--primary);
             color: white;
             transform: translateY(-3px);
         }
-
+        
         .action-btn:hover i {
             color: white;
         }
-
+        
+        .action-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .measurements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .measurement-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .measurement-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+        
+        .empty-state p {
+            margin: 5px 0;
+        }
+        
+        /* RESPONSIVIDADE */
         @media (max-width: 992px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
-        }
-
-        @media (max-width: 768px) {
+            
             .dashboard-container {
                 grid-template-columns: 1fr;
             }
@@ -337,7 +404,9 @@
             .sidebar {
                 display: none;
             }
-            
+        }
+        
+        @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -345,332 +414,481 @@
             .quick-actions {
                 grid-template-columns: 1fr;
             }
+            
+            .measurements-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .current-date {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* ANIMAÇÕES */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-card, .dashboard-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:nth-child(4) { animation-delay: 0.3s; }
+        
+        /* LOADING STATE */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container" id="dashboard">
-        <!-- Carregado via JavaScript -->
-    </div>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-plan" id="userPlan">Plano</div>
+                <div style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">
+                    <i class="fas fa-circle" style="color: #4caf50;"></i> <span id="userStatus">Ativo</span>
+                </div>
+            </div>
 
-    <script src="../js/auth.js"></script>
-    <script src="../js/alunos.js"></script>
-    <script>
-        // Sistema de Dashboard
-        class Dashboard {
-            constructor() {
-                this.init();
-            }
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i> Meu Perfil
+                </a>
+                <a href="schedule.html" class="nav-item">
+                    <i class="fas fa-calendar"></i> Agendamentos
+                </a>
+                <a href="payments.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i> Pagamentos
+                </a>
+                <a href="../index.html" class="nav-item">
+                    <i class="fas fa-external-link-alt"></i> Site Principal
+                </a>
+            </nav>
 
-            async init() {
-                // Verificar autenticação
-                if (!auth.requireAuth()) return;
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair da Conta
+            </button>
+        </aside>
 
-                // Carregar dashboard
-                this.loadDashboard();
-                this.loadUserData();
-            }
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div class="dashboard-header">
+                <div class="welcome-message">
+                    <h1>Bem-vindo, <span id="userFirstName">Aluno</span>!</h1>
+                    <p>Acompanhe sua jornada fitness</p>
+                </div>
+                <div class="current-date" id="currentDate">Carregando data...</div>
+            </div>
 
-            loadDashboard() {
-                const dashboard = document.getElementById('dashboard');
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card stat-1">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Dias este mês</h3>
+                        <div class="stat-value" id="daysThisMonth">0</div>
+                    </div>
+                </div>
                 
-                dashboard.innerHTML = `
-                    <!-- Sidebar -->
-                    <aside class="sidebar" id="sidebar">
-                        <!-- Carregado via JavaScript -->
-                    </aside>
-
-                    <!-- Main Content -->
-                    <main class="main-content">
-                        <!-- Header -->
-                        <div class="dashboard-header">
-                            <div class="welcome-message">
-                                <h1>Bem-vindo, <span id="userName">Aluno</span>!</h1>
-                                <p>Acompanhe sua jornada fitness</p>
-                            </div>
-                            <div class="current-date" id="currentDate"></div>
-                        </div>
-
-                        <!-- Stats -->
-                        <div class="stats-grid">
-                            <div class="stat-card stat-1">
-                                <div class="stat-icon">
-                                    <i class="fas fa-calendar-check"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h3>Dias este mês</h3>
-                                    <div class="stat-value" id="daysThisMonth">12</div>
-                                </div>
-                            </div>
-                            
-                            <div class="stat-card stat-2">
-                                <div class="stat-icon">
-                                    <i class="fas fa-fire"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h3>Calorias médias/dia</h3>
-                                    <div class="stat-value" id="avgCalories">450</div>
-                                </div>
-                            </div>
-                            
-                            <div class="stat-card stat-3">
-                                <div class="stat-icon">
-                                    <i class="fas fa-weight"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h3>Peso atual</h3>
-                                    <div class="stat-value" id="currentWeight">78kg</div>
-                                </div>
-                            </div>
-                            
-                            <div class="stat-card stat-4">
-                                <div class="stat-icon">
-                                    <i class="fas fa-trophy"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h3>Dias seguidos</h3>
-                                    <div class="stat-value" id="streakDays">7</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Main Grid -->
-                        <div class="dashboard-grid">
-                            <!-- Frequência -->
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <h2><i class="fas fa-history"></i> Sua Frequência</h2>
-                                    <a href="schedule.html" class="see-all">Ver histórico completo</a>
-                                </div>
-                                <ul class="attendance-list" id="attendanceList">
-                                    <!-- Carregado via JavaScript -->
-                                </ul>
-                            </div>
-
-                            <!-- Próximas Aulas -->
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <h2><i class="fas fa-calendar-alt"></i> Próximas Aulas</h2>
-                                    <a href="schedule.html" class="see-all">Agendar nova</a>
-                                </div>
-                                <div class="upcoming-classes" id="upcomingClasses">
-                                    <!-- Carregado via JavaScript -->
-                                </div>
-                            </div>
-
-                            <!-- Ações Rápidas -->
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <h2><i class="fas fa-bolt"></i> Ações Rápidas</h2>
-                                </div>
-                                <div class="quick-actions">
-                                    <a href="schedule.html" class="action-btn">
-                                        <i class="fas fa-calendar-plus"></i>
-                                        <span>Agendar Aula</span>
-                                    </a>
-                                    <a href="payments.html" class="action-btn">
-                                        <i class="fas fa-credit-card"></i>
-                                        <span>2ª Via Boleto</span>
-                                    </a>
-                                    <a href="profile.html" class="action-btn">
-                                        <i class="fas fa-user-edit"></i>
-                                        <span>Editar Perfil</span>
-                                    </a>
-                                    <a href="#" class="action-btn" id="checkinBtn">
-                                        <i class="fas fa-qrcode"></i>
-                                        <span>Fazer Check-in</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Medidas -->
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <h2><i class="fas fa-chart-line"></i> Suas Medidas</h2>
-                                    <a href="profile.html" class="see-all">Atualizar</a>
-                                </div>
-                                <div class="measurements" id="measurements">
-                                    <!-- Carregado via JavaScript -->
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                `;
-
-                // Carregar sidebar
-                this.loadSidebar();
+                <div class="stat-card stat-2">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Calorias médias</h3>
+                        <div class="stat-value" id="avgCalories">0</div>
+                    </div>
+                </div>
                 
-                // Configurar data atual
-                this.updateCurrentDate();
+                <div class="stat-card stat-3">
+                    <div class="stat-icon">
+                        <i class="fas fa-weight"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Peso atual</h3>
+                        <div class="stat-value" id="currentWeight">--</div>
+                    </div>
+                </div>
                 
-                // Configurar eventos
-                this.setupEvents();
-                
-                // Carregar dados do usuário
-                this.loadUserData();
-            }
+                <div class="stat-card stat-4">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Dias seguidos</h3>
+                        <div class="stat-value" id="streakDays">0</div>
+                    </div>
+                </div>
+            </div>
 
-            loadSidebar() {
-                const sidebar = document.getElementById('sidebar');
-                const user = auth.currentUser;
-                
-                sidebar.innerHTML = `
-                    <div class="user-profile">
-                        <div class="user-avatar">
-                            <img src="${user.foto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" alt="${user.nome}">
-                        </div>
-                        <div class="user-name">${user.nome.split(' ')[0]}</div>
-                        <div class="user-plan">Plano ${user.plano}</div>
-                        <div style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">
-                            <i class="fas fa-circle" style="color: #4caf50;"></i> ${user.status}
+            <!-- MAIN GRID -->
+            <div class="dashboard-grid">
+                <!-- FREQUÊNCIA -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-history"></i> Sua Frequência</h2>
+                        <a href="schedule.html" class="see-all">Ver histórico</a>
+                    </div>
+                    <ul class="attendance-list" id="attendanceList">
+                        <li class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>Nenhuma frequência registrada</p>
+                            <p style="font-size: 0.9rem;">Faça seu primeiro check-in!</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- PRÓXIMAS AULAS -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-calendar-alt"></i> Próximas Aulas</h2>
+                        <a href="schedule.html" class="see-all">Agendar nova</a>
+                    </div>
+                    <div class="upcoming-classes" id="upcomingClasses">
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-plus"></i>
+                            <p>Nenhuma aula agendada</p>
+                            <p style="font-size: 0.9rem;">Agende sua primeira aula!</p>
                         </div>
                     </div>
+                </div>
 
-                    <nav class="sidebar-nav">
-                        <a href="dashboard.html" class="nav-item active">
-                            <i class="fas fa-home"></i> Dashboard
+                <!-- AÇÕES RÁPIDAS -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-bolt"></i> Ações Rápidas</h2>
+                    </div>
+                    <div class="quick-actions">
+                        <a href="schedule.html" class="action-btn">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span>Agendar Aula</span>
                         </a>
-                        <a href="profile.html" class="nav-item">
-                            <i class="fas fa-user"></i> Meu Perfil
+                        <a href="payments.html" class="action-btn">
+                            <i class="fas fa-credit-card"></i>
+                            <span>2ª Via Boleto</span>
                         </a>
-                        <a href="schedule.html" class="nav-item">
-                            <i class="fas fa-calendar"></i> Agendamentos
+                        <a href="profile.html" class="action-btn">
+                            <i class="fas fa-user-edit"></i>
+                            <span>Editar Perfil</span>
                         </a>
-                        <a href="payments.html" class="nav-item">
-                            <i class="fas fa-credit-card"></i> Pagamentos
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="fas fa-chart-line"></i> Progresso
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="fas fa-dumbbell"></i> Treinos
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="fas fa-utensils"></i> Dieta
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="fas fa-cog"></i> Configurações
-                        </a>
-                    </nav>
+                        <button class="action-btn" onclick="fazerCheckin()" style="border: none; cursor: pointer;">
+                            <i class="fas fa-qrcode"></i>
+                            <span>Fazer Check-in</span>
+                        </button>
+                    </div>
+                </div>
 
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Sair da Conta
-                    </button>
-                `;
-            }
-
-            updateCurrentDate() {
-                const now = new Date();
-                const options = { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                };
-                document.getElementById('currentDate').textContent = 
-                    now.toLocaleDateString('pt-BR', options);
-            }
-
-            loadUserData() {
-                const user = auth.currentUser;
-                if (!user) return;
-
-                // Atualizar nome
-                document.getElementById('userName').textContent = user.nome.split(' ')[0];
-
-                // Atualizar medidas
-                if (user.medidas) {
-                    document.getElementById('currentWeight').textContent = user.medidas.peso;
-                    
-                    const measurementsDiv = document.getElementById('measurements');
-                    measurementsDiv.innerHTML = `
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+                <!-- MEDIDAS -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-line"></i> Suas Medidas</h2>
+                        <a href="profile.html" class="see-all">Atualizar</a>
+                    </div>
+                    <div class="measurements" id="measurements">
+                        <div class="measurements-grid">
                             <div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${user.medidas.peso}</div>
-                                <div style="font-size: 0.9rem; color: var(--gray);">Peso</div>
+                                <div class="measurement-value" id="measurementPeso">--</div>
+                                <div class="measurement-label">Peso</div>
                             </div>
                             <div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${user.medidas.altura}</div>
-                                <div style="font-size: 0.9rem; color: var(--gray);">Altura</div>
+                                <div class="measurement-value" id="measurementAltura">--</div>
+                                <div class="measurement-label">Altura</div>
                             </div>
                             <div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${user.medidas.imc}</div>
-                                <div style="font-size: 0.9rem; color: var(--gray);">IMC</div>
+                                <div class="measurement-value" id="measurementIMC">--</div>
+                                <div class="measurement-label">IMC</div>
                             </div>
                         </div>
-                    `;
-                }
+                        <p style="text-align: center; margin-top: 15px; color: var(--gray); font-size: 0.9rem;">
+                            Atualize suas medidas no seu perfil
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-                // Carregar frequência
-                if (user.frequencia) {
-                    const attendanceList = document.getElementById('attendanceList');
-                    attendanceList.innerHTML = user.frequencia.slice(0, 5).map(att => `
-                        <li class="attendance-item">
-                            <div>
-                                <div class="attendance-date">${att.data}</div>
-                                <div class="attendance-time">${att.entrada} - ${att.saida}</div>
-                            </div>
-                            <div class="attendance-duration">1h30</div>
-                        </li>
-                    `).join('');
-                }
-
-                // Carregar próximas aulas
-                if (user.proximasAulas) {
-                    const upcomingClasses = document.getElementById('upcomingClasses');
-                    upcomingClasses.innerHTML = user.proximasAulas.map(cls => `
-                        <div class="class-item">
-                            <div class="class-info">
-                                <h4>${cls.modalidade}</h4>
-                                <p>${cls.data} às ${cls.hora}</p>
-                            </div>
-                            <span class="class-status confirmed">Confirmada</span>
-                        </div>
-                    `).join('');
-                }
-
-                // Atualizar estatísticas
-                if (user.frequencia) {
-                    document.getElementById('daysThisMonth').textContent = user.frequencia.length;
-                }
+    <!-- SCRIPTS -->
+    <script src="../js/auth.js"></script>
+    <script>
+        // SISTEMA DO DASHBOARD
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📊 Dashboard carregando...');
+            
+            // Verificar autenticação
+            const userData = localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user');
+            
+            if (!userData) {
+                console.log('❌ Nenhum usuário autenticado, redirecionando...');
+                window.location.href = 'index.html';
+                return;
             }
-
-            setupEvents() {
-                // Check-in button
-                const checkinBtn = document.getElementById('checkinBtn');
-                if (checkinBtn) {
-                    checkinBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        this.simulateCheckin();
-                    });
-                }
+            
+            try {
+                const user = JSON.parse(userData);
+                console.log('✅ Usuário autenticado:', user.nome);
+                
+                // Atualizar interface com dados do usuário
+                atualizarInterface(user);
+                atualizarDataAtual();
+                carregarDadosDashboard(user);
+                
+            } catch (error) {
+                console.error('Erro ao carregar usuário:', error);
+                window.location.href = 'index.html';
             }
-
-            simulateCheckin() {
-                // Simular check-in
-                const now = new Date();
-                const time = now.toLocaleTimeString('pt-BR', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-                
-                alert(`✅ Check-in realizado com sucesso!\nHorário: ${time}\nBom treino!`);
-                
-                // Atualizar estatísticas
-                const daysElement = document.getElementById('daysThisMonth');
-                const currentDays = parseInt(daysElement.textContent);
-                daysElement.textContent = currentDays + 1;
-                
-                const streakElement = document.getElementById('streakDays');
-                const currentStreak = parseInt(streakElement.textContent);
-                streakElement.textContent = currentStreak + 1;
+            
+            // Configurar eventos
+            configurarEventos();
+        });
+        
+        function atualizarInterface(user) {
+            // Atualizar sidebar
+            document.getElementById('userName').textContent = user.nome;
+            document.getElementById('userFirstName').textContent = user.nome.split(' ')[0];
+            document.getElementById('userPlan').textContent = `Plano ${user.plano || 'Básico'}`;
+            
+            // Atualizar medidas se existirem
+            if (user.medidas) {
+                document.getElementById('measurementPeso').textContent = user.medidas.peso || '--';
+                document.getElementById('measurementAltura').textContent = user.medidas.altura || '--';
+                document.getElementById('measurementIMC').textContent = user.medidas.imc || '--';
             }
         }
-
-        // Inicializar dashboard quando a página carregar
-        document.addEventListener('DOMContentLoaded', () => {
-            new Dashboard();
-        });
+        
+        function atualizarDataAtual() {
+            const hoje = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = 
+                hoje.toLocaleDateString('pt-BR', options);
+        }
+        
+        function carregarDadosDashboard(user) {
+            // Simular dados do dashboard
+            setTimeout(() => {
+                // Estatísticas
+                document.getElementById('daysThisMonth').textContent = '8';
+                document.getElementById('avgCalories').textContent = '450';
+                document.getElementById('streakDays').textContent = '3';
+                
+                if (user.medidas && user.medidas.peso) {
+                    document.getElementById('currentWeight').textContent = user.medidas.peso;
+                } else {
+                    document.getElementById('currentWeight').textContent = '--';
+                }
+                
+                // Frequência (simulada)
+                const frequencia = [
+                    { data: 'Hoje', entrada: '08:00', saida: '09:30' },
+                    { data: 'Ontem', entrada: '18:00', saida: '19:45' },
+                    { data: '25/01/2024', entrada: '08:30', saida: '10:00' }
+                ];
+                
+                const attendanceList = document.getElementById('attendanceList');
+                attendanceList.innerHTML = '';
+                
+                frequencia.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'attendance-item';
+                    li.innerHTML = `
+                        <div>
+                            <div class="attendance-date">${item.data}</div>
+                            <div class="attendance-time">${item.entrada} - ${item.saida}</div>
+                        </div>
+                        <div class="attendance-duration">1h30</div>
+                    `;
+                    attendanceList.appendChild(li);
+                });
+                
+                // Próximas aulas (simuladas)
+                const upcomingClasses = document.getElementById('upcomingClasses');
+                upcomingClasses.innerHTML = '';
+                
+                const aulas = [
+                    { modalidade: 'CrossFit', data: 'Amanhã', hora: '19:00', status: 'confirmed' },
+                    { modalidade: 'Musculação', data: '30/01/2024', hora: '08:00', status: 'confirmed' }
+                ];
+                
+                if (aulas.length === 0) {
+                    upcomingClasses.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-plus"></i>
+                            <p>Nenhuma aula agendada</p>
+                            <p style="font-size: 0.9rem;">Agende sua primeira aula!</p>
+                        </div>
+                    `;
+                } else {
+                    aulas.forEach(aula => {
+                        const div = document.createElement('div');
+                        div.className = 'class-item';
+                        div.innerHTML = `
+                            <div class="class-info">
+                                <h4>${aula.modalidade}</h4>
+                                <p>${aula.data} às ${aula.hora}</p>
+                            </div>
+                            <span class="class-status ${aula.status}">
+                                ${aula.status === 'confirmed' ? 'Confirmada' : 'Pendente'}
+                            </span>
+                        `;
+                        upcomingClasses.appendChild(div);
+                    });
+                }
+                
+                console.log('✅ Dashboard carregado com sucesso');
+                
+            }, 500); // Simular delay de carregamento
+        }
+        
+        function configurarEventos() {
+            // Evento de check-in
+            window.fazerCheckin = function() {
+                const agora = new Date();
+                const hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                
+                // Adicionar à lista de frequência
+                const attendanceList = document.getElementById('attendanceList');
+                const primeiroItem = attendanceList.querySelector('.empty-state');
+                
+                if (primeiroItem) {
+                    primeiroItem.remove();
+                }
+                
+                const li = document.createElement('li');
+                li.className = 'attendance-item';
+                li.innerHTML = `
+                    <div>
+                        <div class="attendance-date">Agora</div>
+                        <div class="attendance-time">${hora}</div>
+                    </div>
+                    <div class="attendance-duration">Check-in</div>
+                `;
+                attendanceList.insertBefore(li, attendanceList.firstChild);
+                
+                // Atualizar estatísticas
+                const diasMes = document.getElementById('daysThisMonth');
+                diasMes.textContent = parseInt(diasMes.textContent) + 1;
+                
+                const streakDays = document.getElementById('streakDays');
+                streakDays.textContent = parseInt(streakDays.textContent) + 1;
+                
+                // Mostrar notificação
+                mostrarNotificacao('✅ Check-in realizado!', 'Bom treino!');
+            };
+            
+            // Configurar logout
+            window.logout = function() {
+                if (confirm('Tem certeza que deseja sair?')) {
+                    localStorage.removeItem('academia_user');
+                    sessionStorage.removeItem('academia_user');
+                    window.location.href = 'index.html';
+                }
+            };
+        }
+        
+        function mostrarNotificacao(titulo, mensagem) {
+            const notificacao = document.createElement('div');
+            notificacao.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #28a745;
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                    max-width: 300px;
+                ">
+                    <div style="font-weight: 600; margin-bottom: 5px;">${titulo}</div>
+                    <div style="font-size: 0.9rem;">${mensagem}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(notificacao);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notificacao.remove();
+            }, 3000);
+            
+            // Adicionar animação CSS se não existir
+            if (!document.querySelector('#notification-animation')) {
+                const style = document.createElement('style');
+                style.id = 'notification-animation';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Adicionar animação de carregamento
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

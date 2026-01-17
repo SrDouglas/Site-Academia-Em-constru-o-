@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Área do Aluno</title>
+    <link rel="stylesheet" href="../css/area-aluno.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ESTILOS DO PERFIL */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: var(--dark);
+            color: white;
+            padding: 0;
+        }
+        
+        .user-profile-sidebar {
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            margin: 0 auto 15px;
+            overflow: hidden;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .user-plan {
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--primary);
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .nav-item.active {
+            background: rgba(255,107,53,0.1);
+        }
+        
+        .logout-btn {
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: calc(100% - 40px);
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .main-content {
+            padding: 40px;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .profile-header h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .back-to-dashboard {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .profile-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .profile-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .edit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .edit-btn:hover {
+            background: #e55a2b;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .measurements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .measurement-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .measurement-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .measurement-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .progress-bars {
+            margin-top: 20px;
+        }
+        
+        .progress-item {
+            margin-bottom: 15px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-profile {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-stats {
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn-save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-save:hover {
+            background: #e55a2b;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+        
+        /* RESPONSIVIDADE */
+        @media (max-width: 992px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .measurements-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="user-profile-sidebar">
+                <div class="user-avatar" onclick="trocarFoto()" title="Clique para trocar a foto">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name" id="sidebarUserName">Carregando...</div>
+                <div class="user-plan" id="sidebarUserPlan">Plano</div>
+                <div style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">
+                    <i class="fas fa-circle" style="color: #4caf50;"></i> <span id="sidebarUserStatus">Ativo</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="profile.html" class="nav-item active">
+                    <i class="fas fa-user"></i> Meu Perfil
+                </a>
+                <a href="schedule.html" class="nav-item">
+                    <i class="fas fa-calendar"></i> Agendamentos
+                </a>
+                <a href="payments.html" class="nav-item">
+                    <i class="fas fa-credit-card"></i> Pagamentos
+                </a>
+                <a href="config.html" class="nav-item">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+                <a href="../index.html" class="nav-item">
+                    <i class="fas fa-external-link-alt"></i> Site Principal
+                </a>
+            </nav>
+
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair da Conta
+            </button>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div class="profile-header">
+                <div>
+                    <h1>Meu Perfil</h1>
+                    <a href="dashboard.html" class="back-to-dashboard">
+                        <i class="fas fa-arrow-left"></i> Voltar para Dashboard
+                    </a>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="edit-btn" onclick="editarPerfil()">
+                        <i class="fas fa-edit"></i> Editar Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTEÚDO DO PERFIL -->
+            <div class="profile-content">
+                <!-- INFORMAÇÕES PRINCIPAIS -->
+                <div class="profile-card">
+                    <!-- DADOS PESSOAIS -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-id-card"></i> Dados Pessoais</h2>
+                            <button class="edit-btn" onclick="editarDadosPessoais()">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
+                        <div class="info-grid" id="dadosPessoais">
+                            <!-- Carregado via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- INFORMAÇÕES DA ACADEMIA -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-dumbbell"></i> Informações da Academia</h2>
+                            <button class="edit-btn" onclick="editarInfoAcademia()">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
+                        <div class="info-grid" id="infoAcademia">
+                            <!-- Carregado via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- MEDIDAS CORPORAIS -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-chart-line"></i> Medidas Corporais</h2>
+                            <button class="edit-btn" onclick="editarMedidas()">
+                                <i class="fas fa-edit"></i> Atualizar
+                            </button>
+                        </div>
+                        <div class="measurements-grid" id="medidasCorporais">
+                            <!-- Carregado via JavaScript -->
+                        </div>
+                        
+                        <div class="progress-bars" id="progresso">
+                            <!-- Carregado via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- META DE TREINO -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-bullseye"></i> Meta de Treino</h2>
+                            <button class="edit-btn" onclick="editarMeta()">
+                                <i class="fas fa-edit"></i> Alterar
+                            </button>
+                        </div>
+                        <div id="metaTreino">
+                            <!-- Carregado via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIDEBAR DIREITA -->
+                <div class="sidebar-profile">
+                    <h3 style="margin-bottom: 20px; color: var(--dark);">
+                        <i class="fas fa-chart-bar"></i> Estatísticas
+                    </h3>
+                    
+                    <div class="sidebar-stats" id="estatisticas">
+                        <!-- Carregado via JavaScript -->
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                        <h4 style="margin-bottom: 10px; color: var(--dark);">
+                            <i class="fas fa-shield-alt"></i> Segurança
+                        </h4>
+                        <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
+                            Mantenha sua conta segura
+                        </p>
+                        <button onclick="alterarSenha()" style="
+                            background: transparent;
+                            color: var(--primary);
+                            border: 1px solid var(--primary);
+                            padding: 8px 15px;
+                            border-radius: 5px;
+                            width: 100%;
+                            cursor: pointer;
+                            font-weight: 600;
+                        ">
+                            <i class="fas fa-key"></i> Alterar Senha
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL PARA EDIÇÃO -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal" onclick="fecharModal()">&times;</span>
+            <h3 id="modalTitle"><i class="fas fa-edit"></i> Editar Informações</h3>
+            <div id="modalContent">
+                <!-- Conteúdo dinâmico -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../js/auth.js"></script>
+    <script>
+        // SISTEMA DO PERFIL
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('👤 Perfil carregando...');
+            
+            // Verificar autenticação
+            const userData = localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user');
+            
+            if (!userData) {
+                console.log('❌ Nenhum usuário autenticado');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userData);
+                console.log('✅ Usuário autenticado:', user.nome);
+                
+                // Atualizar interface
+                atualizarInterface(user);
+                carregarDadosPerfil(user);
+                
+            } catch (error) {
+                console.error('Erro ao carregar usuário:', error);
+                window.location.href = 'index.html';
+            }
+            
+            // Configurar modal
+            configurarModal();
+        });
+        
+        function atualizarInterface(user) {
+            // Atualizar sidebar
+            document.getElementById('sidebarUserName').textContent = user.nome;
+            document.getElementById('sidebarUserPlan').textContent = `Plano ${user.plano || 'Básico'}`;
+        }
+        
+        function carregarDadosPerfil(user) {
+            // Dados pessoais
+            const dadosPessoais = document.getElementById('dadosPessoais');
+            dadosPessoais.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-user"></i> Nome Completo
+                    </div>
+                    <div class="info-value">${user.nome || 'Não informado'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-id-card"></i> CPF
+                    </div>
+                    <div class="info-value">${formatarCPF(user.cpf || '')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-birthday-cake"></i> Data de Nascimento
+                    </div>
+                    <div class="info-value">${formatarData(user.dataNascimento || '')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-envelope"></i> E-mail
+                    </div>
+                    <div class="info-value">${user.email || 'Não informado'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i> Telefone
+                    </div>
+                    <div class="info-value">${user.telefone || 'Não informado'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-venus-mars"></i> Gênero
+                    </div>
+                    <div class="info-value">${user.genero || 'Não informado'}</div>
+                </div>
+            `;
+            
+            // Informações da academia
+            const infoAcademia = document.getElementById('infoAcademia');
+            infoAcademia.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-dumbbell"></i> Plano Atual
+                    </div>
+                    <div class="info-value">${user.plano || 'Básico'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-calendar-check"></i> Data de Matrícula
+                    </div>
+                    <div class="info-value">${user.dataMatricula || 'Não informado'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-calendar-alt"></i> Vencimento
+                    </div>
+                    <div class="info-value">${user.vencimento || 'Não informado'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-barcode"></i> Matrícula
+                    </div>
+                    <div class="info-value">${user.matricula || 'Não informada'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-circle"></i> Status
+                    </div>
+                    <div class="info-value" style="color: #4caf50;">
+                        <i class="fas fa-circle" style="font-size: 0.8rem;"></i> ${user.status || 'Ativo'}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-user-tie"></i> Personal Trainer
+                    </div>
+                    <div class="info-value">${user.personal || 'Não atribuído'}</div>
+                </div>
+            `;
+            
+            // Medidas corporais
+            const medidasCorporais = document.getElementById('medidasCorporais');
+            if (user.medidas) {
+                medidasCorporais.innerHTML = `
+                    <div class="measurement-item">
+                        <div class="measurement-value">${user.medidas.peso || '--'}</div>
+                        <div class="measurement-label">Peso</div>
+                    </div>
+                    <div class="measurement-item">
+                        <div class="measurement-value">${user.medidas.altura || '--'}</div>
+                        <div class="measurement-label">Altura</div>
+                    </div>
+                    <div class="measurement-item">
+                        <div class="measurement-value">${user.medidas.imc || '--'}</div>
+                        <div class="measurement-label">IMC</div>
+                    </div>
+                `;
+            } else {
+                medidasCorporais.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1; padding: 20px;">
+                        <i class="fas fa-ruler-combined"></i>
+                        <p>Nenhuma medida registrada</p>
+                        <button onclick="editarMedidas()" style="
+                            background: var(--primary);
+                            color: white;
+                            border: none;
+                            padding: 8px 15px;
+                            border-radius: 5px;
+                            margin-top: 10px;
+                            cursor: pointer;
+                        ">
+                            <i class="fas fa-plus"></i> Adicionar Medidas
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Progresso
+            const progresso = document.getElementById('progresso');
+            progresso.innerHTML = `
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Frequência Mensal</span>
+                        <span>8/12 dias</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 67%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Meta de Peso</span>
+                        <span>78/75 kg</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Meta de treino
+            const metaTreino = document.getElementById('metaTreino');
+            metaTreino.innerHTML = `
+                <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                    <p style="margin: 0; color: #2e7d32;">
+                        <strong>Meta atual:</strong> Perder 5kg em 3 meses
+                    </p>
+                    <p style="margin: 10px 0 0 0; font-size: 0.9rem; color: #555;">
+                        <i class="fas fa-calendar"></i> Início: 15/01/2024 | 
+                        <i class="fas fa-flag-checkered"></i> Término: 15/04/2024
+                    </p>
+                </div>
+            `;
+            
+            // Estatísticas
+            const estatisticas = document.getElementById('estatisticas');
+            estatisticas.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Dias treinados</span>
+                    <span class="stat-value">24</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Média semanal</span>
+                    <span class="stat-value">3.4 dias</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Calorias totais</span>
+                    <span class="stat-value">12.450</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Recorde peso</span>
+                    <span class="stat-value">85kg</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Treinos concluídos</span>
+                    <span class="stat-value">48</span>
+                </div>
+            `;
+        }
+        
+        function formatarCPF(cpf) {
+            if (!cpf) return 'Não informado';
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length !== 11) return cpf;
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        
+        function formatarData(data) {
+            if (!data) return 'Não informado';
+            data = data.replace(/\D/g, '');
+            if (data.length !== 8) return data;
+            return data.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+        }
+        
+        function configurarModal() {
+            const modal = document.getElementById('editModal');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        function abrirModal(titulo, conteudo) {
+            const modal = document.getElementById('editModal');
+            document.getElementById('modalTitle').innerHTML = titulo;
+            document.getElementById('modalContent').innerHTML = conteudo;
+            modal.style.display = 'flex';
+        }
+        
+        function fecharModal() {
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'none';
+        }
+        
+        // FUNÇÕES DE EDIÇÃO
+        window.editarPerfil = function() {
+            const user = JSON.parse(localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user'));
+            
+            const conteudo = `
+                <form id="editProfileForm" onsubmit="salvarPerfil(event)">
+                    <div class="form-group">
+                        <label for="editNome">Nome Completo</label>
+                        <input type="text" id="editNome" value="${user.nome || ''}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editEmail">E-mail</label>
+                        <input type="email" id="editEmail" value="${user.email || ''}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTelefone">Telefone</label>
+                        <input type="tel" id="editTelefone" value="${user.telefone || ''}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editGenero">Gênero</label>
+                        <select id="editGenero">
+                            <option value="" ${!user.genero ? 'selected' : ''}>Selecione</option>
+                            <option value="Masculino" ${user.genero === 'Masculino' ? 'selected' : ''}>Masculino</option>
+                            <option value="Feminino" ${user.genero === 'Feminino' ? 'selected' : ''}>Feminino</option>
+                            <option value="Outro" ${user.genero === 'Outro' ? 'selected' : ''}>Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Salvar Alterações</button>
+                        <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                    </div>
+                </form>
+            `;
+            
+            abrirModal('<i class="fas fa-user-edit"></i> Editar Perfil', conteudo);
+        };
+        
+        window.salvarPerfil = function(e) {
+            e.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user'));
+            
+            // Atualizar dados
+            user.nome = document.getElementById('editNome').value;
+            user.email = document.getElementById('editEmail').value;
+            user.telefone = document.getElementById('editTelefone').value;
+            user.genero = document.getElementById('editGenero').value;
+            
+            // Salvar no storage
+            if (localStorage.getItem('academia_user')) {
+                localStorage.setItem('academia_user', JSON.stringify(user));
+            } else {
+                sessionStorage.setItem('academia_user', JSON.stringify(user));
+            }
+            
+            // Atualizar interface
+            carregarDadosPerfil(user);
+            atualizarInterface(user);
+            
+            // Fechar modal e mostrar mensagem
+            fecharModal();
+            mostrarMensagem('✅ Perfil atualizado com sucesso!');
+        };
+        
+        window.editarMedidas = function() {
+            const user = JSON.parse(localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user'));
+            
+            const conteudo = `
+                <form id="editMedidasForm" onsubmit="salvarMedidas(event)">
+                    <div class="form-group">
+                        <label for="editPeso">Peso (kg)</label>
+                        <input type="number" step="0.1" id="editPeso" value="${user.medidas ? user.medidas.peso.replace('kg', '') : ''}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editAltura">Altura (m)</label>
+                        <input type="number" step="0.01" id="editAltura" value="${user.medidas ? user.medidas.altura.replace('m', '') : ''}" required>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--gray);">
+                            <i class="fas fa-info-circle"></i> O IMC será calculado automaticamente
+                        </p>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Salvar Medidas</button>
+                        <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                    </div>
+                </form>
+            `;
+            
+            abrirModal('<i class="fas fa-weight"></i> Atualizar Medidas', conteudo);
+        };
+        
+        window.salvarMedidas = function(e) {
+            e.preventDefault();
+            
+            const peso = parseFloat(document.getElementById('editPeso').value);
+            const altura = parseFloat(document.getElementById('editAltura').value);
+            
+            // Calcular IMC
+            const imc = (peso / (altura * altura)).toFixed(1);
+            
+            const user = JSON.parse(localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user'));
+            
+            // Criar ou atualizar medidas
+            user.medidas = {
+                peso: `${peso}kg`,
+                altura: `${altura}m`,
+                imc: imc
+            };
+            
+            // Salvar no storage
+            if (localStorage.getItem('academia_user')) {
+                localStorage.setItem('academia_user', JSON.stringify(user));
+            } else {
+                sessionStorage.setItem('academia_user', JSON.stringify(user));
+            }
+            
+            // Atualizar interface
+            carregarDadosPerfil(user);
+            
+            // Fechar modal e mostrar mensagem
+            fecharModal();
+            mostrarMensagem('✅ Medidas atualizadas com sucesso!');
+        };
+        
+        window.alterarSenha = function() {
+            const conteudo = `
+                <form id="alterarSenhaForm" onsubmit="salvarSenha(event)">
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                        <p style="margin: 0; color: #856404;">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Para alterar sua senha, entre em contato com a recepção da academia.
+                        </p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>CPF</label>
+                        <input type="text" value="${formatarCPF(JSON.parse(localStorage.getItem('academia_user') || sessionStorage.getItem('academia_user')).cpf)}" readonly>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="tel:+5511999999999" style="
+                            background: #25D366;
+                            color: white;
+                            text-decoration: none;
+                            padding: 12px 25px;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;
+                        ">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <button type="button" class="btn-cancel" onclick="fecharModal()">Fechar</button>
+                    </div>
+                </form>
+            `;
+            
+            abrirModal('<i class="fas fa-key"></i> Alterar Senha', conteudo);
+        };
+        
+        window.trocarFoto = function() {
+            mostrarMensagem('📸 Funcionalidade em desenvolvimento');
+        };
+        
+        // Funções auxiliares
+        window.mostrarMensagem = function(mensagem) {
+            const msgDiv = document.createElement('div');
+            msgDiv.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                ">
+                    <i class="fas fa-check-circle"></i> ${mensagem}
+                </div>
+            `;
+            
+            document.body.appendChild(msgDiv);
+            
+            setTimeout(() => {
+                msgDiv.remove();
+            }, 3000);
+        };
+        
+        // Adicionar animação CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Logout
+        window.logout = function() {
+            if (confirm('Tem certeza que deseja sair da sua conta?')) {
+                localStorage.removeItem('academia_user');
+                sessionStorage.removeItem('academia_user');
+                window.location.href = 'index.html';
+            }
+        };
+    </script>
+</body>
+</html>
