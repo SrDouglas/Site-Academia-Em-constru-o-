@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Aluno - Academia Fit</title>
+    <link rel="stylesheet" href="../css/area-aluno.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page">
+    <!-- BOTÃO PARA VOLTAR AO SITE PRINCIPAL -->
+    <div class="back-to-site-container">
+        <a href="../index.html" class="back-to-site-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Voltar ao Site da Academia</span>
+        </a>
+    </div>
+
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <h1>Área do Aluno</h1>
+            </div>
+            <p>Acesse sua conta para gerenciar sua jornada fitness</p>
+        </div>
+
+        <div class="login-card">
+            <div class="login-illustration">
+                <i class="fas fa-user-check"></i>
+                <h3>Bem-vindo de volta!</h3>
+                <p>Acompanhe seu progresso e gerencie sua conta</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="cpf">
+                        <i class="fas fa-id-card"></i> CPF
+                    </label>
+                    <input 
+                        type="text" 
+                        id="cpf" 
+                        name="cpf" 
+                        placeholder="123.456.789-00"
+                        maxlength="14"
+                        required
+                    >
+                    <small class="help-text">Digite apenas números</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-calendar-alt"></i> Data de Nascimento
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="DDMMAAAA"
+                        maxlength="8"
+                        required
+                    >
+                    <small class="help-text">Exemplo: 15041990 para 15/04/1990</small>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="remember">
+                        <span>Lembrar meu acesso</span>
+                    </label>
+                    <a href="#" id="forgotPassword" class="forgot-password">Esqueceu a data?</a>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Entrar na Área do Aluno
+                </button>
+
+                <div class="login-info">
+                    <p><i class="fas fa-info-circle"></i> <strong>Primeiro acesso?</strong></p>
+                    <p>Sua senha é sua data de nascimento no formato DDMMAAAA (8 dígitos)</p>
+                    <p>Exemplo: Nascido em 15/04/1990 = senha: <strong>15041990</strong></p>
+                </div>
+            </form>
+
+            <div class="support-contact">
+                <p><i class="fas fa-headset"></i> Precisa de ajuda?</p>
+                <a href="https://wa.me/5511999999999" target="_blank" class="support-btn">
+                    <i class="fab fa-whatsapp"></i> Falar com suporte
+                </a>
+            </div>
+        </div>
+
+        <div class="security-info">
+            <p><i class="fas fa-shield-alt"></i> Ambiente seguro • Seus dados estão protegidos</p>
+        </div>
+    </div>
+
+    <!-- Modal de Recuperação -->
+    <div id="recoveryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fas fa-key"></i> Recuperar Acesso</h3>
+            <p>Entre em contato com a recepção da academia para redefinir sua senha.</p>
+            <div class="contact-options">
+                <a href="tel:+5511999999999" class="contact-option">
+                    <i class="fas fa-phone"></i> Ligar agora
+                </a>
+                <a href="https://wa.me/5511999999999" target="_blank" class="contact-option whatsapp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="mailto:suporte@academiafit.com" class="contact-option">
+                    <i class="fas fa-envelope"></i> E-mail
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS DE TESTE - SIMULAÇÃO DE BANCO DE DADOS
+        const alunosDB = [
+            {
+                id: 1,
+                nome: "João Silva",
+                cpf: "12345678900",
+                dataNascimento: "15041990",
+                email: "joao@email.com",
+                telefone: "(11) 99999-9999",
+                plano: "Completo",
+                status: "Ativo"
+            },
+            {
+                id: 2,
+                nome: "Maria Santos",
+                cpf: "98765432100",
+                dataNascimento: "22081985",
+                email: "maria@email.com",
+                telefone: "(11) 98888-8888",
+                plano: "Família",
+                status: "Ativo"
+            }
+        ];
+
+        // FUNÇÕES DE VALIDAÇÃO
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            
+            if (cpf.length !== 11) return false;
+            if (/^(\d)\1+$/.test(cpf)) return false;
+            
+            let soma = 0;
+            let resto;
+            
+            for (let i = 1; i <= 9; i++) {
+                soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+            }
+            
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.substring(9, 10))) return false;
+            
+            soma = 0;
+            for (let i = 1; i <= 10; i++) {
+                soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+            }
+            
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.substring(10, 11))) return false;
+            
+            return true;
+        }
+
+        function formatarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length > 11) cpf = cpf.substring(0, 11);
+            
+            if (cpf.length > 9) {
+                cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            } else if (cpf.length > 6) {
+                cpf = cpf.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+            } else if (cpf.length > 3) {
+                cpf = cpf.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+            }
+            
+            return cpf;
+        }
+
+        function validarData(data) {
+            data = data.replace(/\D/g, '');
+            if (data.length !== 8) return false;
+            
+            const dia = parseInt(data.substring(0, 2));
+            const mes = parseInt(data.substring(2, 4));
+            const ano = parseInt(data.substring(4, 8));
+            
+            if (dia < 1 || dia > 31) return false;
+            if (mes < 1 || mes > 12) return false;
+            if (ano < 1900 || ano > new Date().getFullYear()) return false;
+            
+            return true;
+        }
+
+        function buscarAluno(cpf, senha) {
+            cpf = cpf.replace(/\D/g, '');
+            return alunosDB.find(aluno => 
+                aluno.cpf === cpf && aluno.dataNascimento === senha
+            );
+        }
+
+        // SISTEMA DE LOGIN
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Sistema de login inicializado');
+            
+            // Formatação automática do CPF
+            const cpfInput = document.getElementById('cpf');
+            if (cpfInput) {
+                cpfInput.addEventListener('input', function(e) {
+                    const cursorPos = e.target.selectionStart;
+                    const originalLength = e.target.value.length;
+                    
+                    e.target.value = formatarCPF(e.target.value);
+                    
+                    const newLength = e.target.value.length;
+                    const cursorOffset = newLength - originalLength;
+                    e.target.setSelectionRange(cursorPos + cursorOffset, cursorPos + cursorOffset);
+                });
+            }
+
+            // Validação da data
+            const senhaInput = document.getElementById('password');
+            if (senhaInput) {
+                senhaInput.addEventListener('input', function(e) {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 8) {
+                        e.target.value = value.substring(0, 8);
+                    } else {
+                        e.target.value = value;
+                    }
+                });
+            }
+
+            // Formulário de login
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Tentativa de login...');
+                    
+                    const cpf = cpfInput.value;
+                    const senha = senhaInput.value;
+                    const remember = document.getElementById('remember').checked;
+                    
+                    // Validações
+                    if (!validarCPF(cpf)) {
+                        mostrarErro(cpfInput, 'CPF inválido');
+                        return;
+                    }
+                    
+                    if (!validarData(senha)) {
+                        mostrarErro(senhaInput, 'Data de nascimento inválida');
+                        return;
+                    }
+                    
+                    // Buscar aluno
+                    const aluno = buscarAluno(cpf, senha);
+                    
+                    if (!aluno) {
+                        mostrarErro(senhaInput, 'CPF ou data de nascimento incorretos');
+                        return;
+                    }
+                    
+                    // Login bem-sucedido
+                    console.log('Login bem-sucedido para:', aluno.nome);
+                    
+                    // Salvar no storage
+                    if (remember) {
+                        localStorage.setItem('academia_user', JSON.stringify(aluno));
+                    } else {
+                        sessionStorage.setItem('academia_user', JSON.stringify(aluno));
+                    }
+                    
+                    // Feedback visual
+                    const loginBtn = document.querySelector('.btn-login');
+                    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecionando...';
+                    loginBtn.disabled = true;
+                    
+                    // Redirecionar após 1 segundo
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                });
+            }
+
+            // Modal de recuperação
+            const forgotLink = document.getElementById('forgotPassword');
+            const modal = document.getElementById('recoveryModal');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            if (forgotLink && modal) {
+                forgotLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    modal.style.display = 'flex';
+                });
+            }
+            
+            if (closeBtn && modal) {
+                closeBtn.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            // Fechar modal ao clicar fora
+            if (modal) {
+                window.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+
+            // Função para mostrar erros
+            function mostrarErro(input, mensagem) {
+                input.classList.add('error');
+                
+                // Remover erro anterior
+                const erroAnterior = input.parentNode.querySelector('.error-message');
+                if (erroAnterior) erroAnterior.remove();
+                
+                // Criar nova mensagem
+                const erroDiv = document.createElement('div');
+                erroDiv.className = 'error-message';
+                erroDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${mensagem}`;
+                erroDiv.style.color = '#dc3545';
+                erroDiv.style.fontSize = '0.85rem';
+                erroDiv.style.marginTop = '5px';
+                
+                input.parentNode.appendChild(erroDiv);
+                
+                // Remover após 3 segundos
+                setTimeout(() => {
+                    input.classList.remove('error');
+                    erroDiv.remove();
+                }, 3000);
+            }
+        });
+    </script>
+
+<script>
+    console.log('=== DEBUG ===');
+    console.log('Página carregada');
+    console.log('Formulário:', document.getElementById('loginForm'));
+    
+    // Teste manual
+    setTimeout(function() {
+        console.log('CPF Input:', document.getElementById('cpf'));
+        console.log('Senha Input:', document.getElementById('password'));
+        console.log('Submit button:', document.querySelector('.btn-login'));
+    }, 1000);
+</script>
+
+</body>
+</html>

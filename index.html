@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia Fit - Transforme seu corpo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- HEADER / MENU -->
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>ACADEMIA FIT</span>
+            </a>
+            
+            <nav class="nav">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-list" id="navList">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#modalidades">Modalidades</a></li>
+                    <li><a href="#planos">Planos</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                    <li><a href="area-aluno/" class="btn-trial"><i class="fas fa-user"></i> Área do Aluno</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>TRANSFORME SEU CORPO, TRANSFORME SUA VIDA</h1>
+                <p>Equipamentos modernos, professores certificados e planos acessíveis. Sua jornada fitness começa aqui!</p>
+                <div class="hero-buttons">
+                    <a href="#planos" class="btn-primary">Ver Planos</a>
+                    <a href="#contato" class="btn-secondary">Agendar Aula</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Imagem será via CSS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- MODALIDADES DESTAQUE -->
+    <section class="modalities" id="modalidades">
+        <div class="container">
+            <h2>NOSSAS MODALIDADES</h2>
+            <div class="modality-grid">
+                <div class="modality-card">
+                    <i class="fas fa-weight-hanging"></i>
+                    <h3>Musculação</h3>
+                    <p>Equipamentos modernos e orientação especializada</p>
+                </div>
+                <div class="modality-card">
+                    <i class="fas fa-running"></i>
+                    <h3>CrossFit</h3>
+                    <p>Treinos funcionais de alta intensidade</p>
+                </div>
+                <div class="modality-card">
+                    <i class="fas fa-spa"></i>
+                    <h3>Pilates</h3>
+                    <p>Fortalecimento e alongamento</p>
+                </div>
+                <div class="modality-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Aulas em Grupo</h3>
+                    <p>Zumba, Spinning, Fit Dance e mais</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLANOS -->
+    <section class="plans" id="planos">
+        <div class="container">
+            <h2>PLANOS ACESSÍVEIS</h2>
+            <div class="plan-cards">
+                <div class="plan-card">
+                    <h3>BÁSICO</h3>
+                    <div class="price">R$ <span>89</span>/mês</div>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Musculação</li>
+                        <li><i class="fas fa-check"></i> Acessibilidade total</li>
+                        <li><i class="fas fa-times"></i> Aulas em grupo</li>
+                        <li><i class="fas fa-times"></i> Avaliação física</li>
+                    </ul>
+                    <a href="#contato" class="btn-plan">Matricule-se</a>
+                </div>
+                
+                <div class="plan-card popular">
+                    <div class="popular-badge">MAIS POPULAR</div>
+                    <h3>COMPLETO</h3>
+                    <div class="price">R$ <span>129</span>/mês</div>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Todas modalidades</li>
+                        <li><i class="fas fa-check"></i> Aulas ilimitadas</li>
+                        <li><i class="fas fa-check"></i> Avaliação física</li>
+                        <li><i class="fas fa-check"></i> Acesso a todas unidades</li>
+                    </ul>
+                    <a href="#contato" class="btn-plan">Matricule-se</a>
+                </div>
+                
+                <div class="plan-card">
+                    <h3>FAMÍLIA</h3>
+                    <div class="price">R$ <span>199</span>/mês</div>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Para até 3 pessoas</li>
+                        <li><i class="fas fa-check"></i> Todas modalidades</li>
+                        <li><i class="fas fa-check"></i> Desconto em suplementos</li>
+                        <li><i class="fas fa-check"></i> Lockers gratuitos</li>
+                    </ul>
+                    <a href="#contato" class="btn-plan">Matricule-se</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="contact" id="contato">
+        <div class="container">
+            <div class="contact-info">
+                <h2>VENHA NOS CONHECER</h2>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>ENDEREÇO</h4>
+                        <p>Rua Exemplo, 123 - Centro, Sua Cidade - SP</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h4>HORÁRIO</h4>
+                        <p>Segunda a Sexta: 6h às 22h<br>Sábado: 8h às 14h<br>Domingo: Fechado</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>TELEFONE</h4>
+                        <p>(11) 99999-9999</p>
+                    </div>
+                </div>
+                <div class="whatsapp-btn">
+                    <a href="https://wa.me/5511999999999" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Fale conosco no WhatsApp
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h3>Agende sua aula experimental</h3>
+                <form id="trialForm">
+                    <input type="text" placeholder="Seu nome" required>
+                    <input type="tel" placeholder="WhatsApp" required>
+                    <input type="email" placeholder="E-mail" required>
+                    <select required>
+                        <option value="">Selecione a modalidade</option>
+                        <option value="musculacao">Musculação</option>
+                        <option value="crossfit">CrossFit</option>
+                        <option value="pilates">Pilates</option>
+                    </select>
+                    <button type="submit" class="btn-primary">Agendar Aula Grátis</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>ACADEMIA FIT</span>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2024 Academia Fit. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
