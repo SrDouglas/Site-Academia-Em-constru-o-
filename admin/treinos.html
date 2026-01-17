@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Montagem de Treino</title>
+</head>
+
+<body onload="initAdmin()">
+
+  <h1>🏋️ Área do Administrador</h1>
+
+  <hr>
+
+  <h2>Selecionar aluno</h2>
+  <select id="alunoSelect"></select>
+
+  <hr>
+
+  <h2>📚 Exercícios (API)</h2>
+  <ul id="listaExercicios"></ul>
+
+  <hr>
+
+  <h2>📝 Treino do aluno</h2>
+  <textarea
+    id="treino"
+    rows="10"
+    cols="50"
+    placeholder="O treino será montado aqui"
+  ></textarea>
+
+  <br><br>
+
+  <button onclick="salvarTreino()">Salvar Treino</button>
+
+  <!-- Scripts -->
+  <script src="../js/alunos.js"></script>
+  <script src="treinos.js"></script>
+  <script src="../js/treinos-db.js"></script>
+
+
+</body>
+</html>
