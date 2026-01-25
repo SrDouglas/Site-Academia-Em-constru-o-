@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área do Aluno - Academia Fit</title>
+
+  <link rel="stylesheet" href="../css/area-aluno.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Mantém o visual coerente com seu layout atual */
+    .panel-card {
+      margin-top: 15px;
+    }
+
+    .panel-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .btn-logout {
+      background: #6c757d !important;
+    }
+
+    #mensagem {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body class="login-page">
+  <!-- BOTÃO PARA VOLTAR AO SITE PRINCIPAL -->
+  <div class="back-to-site-container">
+    <a href="../index.html" class="back-to-site-btn">
+      <i class="fas fa-arrow-left"></i>
+      <span>Voltar ao Site da Academia</span>
+    </a>
+  </div>
+
+  <div class="login-container">
+    <div class="login-header">
+      <div class="logo">
+        <i class="fas fa-dumbbell"></i>
+        <h1>Área do Aluno</h1>
+      </div>
+      <p>Gerencie sua jornada fitness</p>
+    </div>
+
+    <div class="login-card panel-card">
+      <div class="login-illustration">
+        <i class="fas fa-user-circle"></i>
+        <h3 id="boasVindas">Carregando...</h3>
+        <p>Acesse rapidamente suas informações</p>
+      </div>
+
+      <div class="login-form">
+        <div class="validation-info" style="margin-bottom: 10px;">
+          <div class="info-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Você está em um ambiente protegido por login e token (JWT).</span>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <a class="btn-login btn-nav" href="treinos.html">
+            <i class="fas fa-dumbbell"></i> Treinos
+          </a>
+
+          <a class="btn-login btn-nav" href="schedule.html">
+            <i class="fas fa-calendar-check"></i> Agendamentos
+          </a>
+
+          <a class="btn-login btn-nav" href="pagamentos.html">
+            <i class="fas fa-credit-card"></i> Pagamentos e Cobranças
+          </a>
+
+          <a class="btn-login btn-nav" href="perfil.html">
+            <i class="fas fa-user"></i> Perfil
+          </a>
+
+          <button id="btnSair" class="btn-login btn-nav btn-logout" type="button">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+
+          <p id="mensagem"></p>
+        </div>
+      </div>
+
+      <div class="support-contact">
+        <p><i class="fas fa-headset"></i> Precisa de ajuda?</p>
+        <a href="https://wa.me/5511999999999" target="_blank" class="support-btn">
+          <i class="fab fa-whatsapp"></i> Falar com suporte
+        </a>
+      </div>
+    </div>
+
+    <div class="security-info">
+      <p><i class="fas fa-shield-alt"></i> Ambiente seguro • Seus dados estão protegidos</p>
+    </div>
+  </div>
+
+  <!-- Botão flutuante extra para voltar ao site -->
+  <div class="floating-home-btn">
+    <a href="../index.html" title="Voltar ao site principal">
+      <i class="fas fa-home"></i>
+      <span>Site</span>
+    </a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      const usuarioStr = localStorage.getItem('usuario');
+
+      const boasVindas = document.getElementById('boasVindas');
+      const mensagem = document.getElementById('mensagem');
+
+      // Se não estiver logado, volta para login
+      if (!token || !usuarioStr) {
+        window.location.href = '../login.html';
+        return;
+      }
+
+      let usuario = null;
+      try { usuario = JSON.parse(usuarioStr); } catch {}
+
+      // Se for admin, manda pro painel admin
+      if (usuario && usuario.tipo === 'admin') {
+        window.location.href = '../admin/admin-bio.html';
+        return;
+      }
+
+      // Boas-vindas
+      const nome = usuario?.nome ? usuario.nome.split(' ')[0] : 'Aluno';
+      boasVindas.textContent = `Bem-vindo, ${nome}!`;
+      if (mensagem) {
+        mensagem.style.color = '#6c757d';
+        mensagem.textContent = 'Sessão ativa.';
+      }
+
+      // Logout
+      const btnSair = document.getElementById('btnSair');
+      btnSair.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '../login.html';
+      });
+    });
+  </script>
+</body>
+</html>

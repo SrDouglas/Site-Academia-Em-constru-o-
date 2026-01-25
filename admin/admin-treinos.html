@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Montagem de Treino</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body { background:#111; color:#fff; font-family: Arial, sans-serif; }
+    .wrap { max-width: 1200px; margin:0 auto; padding: 18px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 14px; }
+    .btn {
+      border:0; border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:700;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn-primary { background: var(--primary, #ff6b35); color:#fff; }
+    .btn-secondary { background:#6c757d; color:#fff; }
+    .btn-danger { background:#dc3545; color:#fff; }
+    .card { background:#1c1c1c; border:1px solid #2a2a2a; border-radius:12px; padding:14px; }
+    .grid { display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+    .input, select, textarea {
+      width:100%;
+      padding:10px;
+      border:1px solid #333;
+      border-radius:10px;
+      background:#0f0f0f;
+      color:#fff;
+      outline:none;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .list { list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+    .item { background:#141414; border:1px solid #2a2a2a; border-radius:12px; padding:12px; }
+    .item h4 { margin:0 0 6px 0; }
+    .meta { color:#bbb; font-size: 13px; }
+    .msg { margin-top: 10px; font-weight:700; }
+
+    .exercise-actions { margin-top:10px; display:flex; gap:10px; }
+    .pill { font-size:12px; color:#bbb; border:1px solid #333; padding:4px 8px; border-radius:999px; display:inline-flex; gap:6px; align-items:center; }
+
+    .treino-head { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .treino-title { margin:0; display:flex; align-items:center; gap:10px; }
+    .table {
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid #2a2a2a;
+    }
+    .table th, .table td {
+      border-bottom: 1px solid #2a2a2a;
+      padding: 10px;
+      vertical-align: top;
+    }
+    .table th { color:#bbb; font-size: 13px; text-align:left; background:#151515; }
+    .table td input, .table td textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      border-radius: 10px;
+    }
+    .mini { width: 90px; }
+    .mini2 { width: 120px; }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="../index.html" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+
+      <div class="row" style="margin:0;">
+        <a href="admin-bio.html" class="btn btn-secondary">
+          <i class="fas fa-chart-line"></i> Bioimpedância
+        </a>
+        <button id="btnSair" class="btn btn-secondary" type="button">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+      </div>
+    </div>
+
+    <h1 style="margin:0 0 12px 0;">🏋️ Admin • Montagem de Treino</h1>
+
+    <div class="card">
+      <div class="row" style="align-items:end;">
+        <div style="flex:1; min-width: 260px;">
+          <label>Selecionar aluno</label>
+          <select id="alunoSelect"></select>
+        </div>
+
+        <div style="flex:1; min-width: 260px;">
+          <label>Buscar exercício (API)</label>
+          <input id="q" class="input" placeholder="Ex: squat, bench, pull up..." />
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:end;">
+          <button id="btnBuscar" class="btn btn-primary" type="button">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+          <button id="btnLimparBusca" class="btn btn-secondary" type="button">
+            Limpar
+          </button>
+        </div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="grid" style="margin-top:12px;">
+        <!-- COLUNA: EXERCÍCIOS -->
+        <div class="card" style="background:#161616;">
+          <div class="treino-head">
+            <h3 class="treino-title" style="margin:0;"><i class="fas fa-book"></i> Exercícios (API)</h3>
+            <span class="pill"><i class="fas fa-info-circle"></i> Clique em “Adicionar”</span>
+          </div>
+          <ul id="listaExercicios" class="list" style="margin-top:10px;"></ul>
+        </div>
+
+        <!-- COLUNA: TREINO MONTADO -->
+        <div class="card" style="background:#161616;">
+          <div class="treino-head">
+            <h3 class="treino-title"><i class="fas fa-clipboard-list"></i> Treino montado</h3>
+            <span id="contadorItens" class="pill"><i class="fas fa-list"></i> 0 itens</span>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div style="flex:1; min-width: 200px;">
+              <label>Título do treino</label>
+              <input id="tituloTreino" class="input" placeholder="Ex: Treino A - Peito/Tríceps" />
+            </div>
+
+            <div style="flex:1; min-width: 200px;">
+              <label>Observações gerais</label>
+              <input id="obsTreino" class="input" placeholder="Opcional: aquecimento, alongamento, etc." />
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:40px;">#</th>
+                  <th>Exercício</th>
+                  <th class="mini">Séries</th>
+                  <th class="mini2">Reps</th>
+                  <th class="mini2">Carga</th>
+                  <th class="mini2">Descanso (s)</th>
+                  <th>Notas</th>
+                  <th style="width:90px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyTreino">
+                <!-- itens entram aqui -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="btnSalvar" class="btn btn-primary" type="button">
+              <i class="fas fa-save"></i> Salvar treino
+            </button>
+            <button id="btnLimparTreino" class="btn btn-secondary" type="button">
+              Limpar treino
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proteção e scripts -->
+  <script src="../js/guard-admin.js"></script>
+  <script src="../js/admin-treinos.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treinos - Área do Aluno</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/area-aluno.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 18px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom: 14px; }
+    .topbar a { text-decoration:none; }
+    .card { background:#1c1c1c; border:1px solid #2a2a2a; border-radius:12px; padding:14px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .input, .select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: #0f0f0f;
+      color: #fff;
+      outline: none;
+    }
+    .col { flex: 1; min-width: 220px; }
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn-primary { background: var(--primary, #ff6b35); color:#fff; }
+    .btn-secondary { background:#6c757d; color:#fff; }
+    .grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .exercise { background:#141414; border:1px solid #2a2a2a; border-radius:12px; padding:12px; }
+    .exercise h4 { margin: 0 0 6px 0; }
+    .meta { color:#bbb; font-size: 13px; }
+    .msg { margin-top:10px; font-weight:700; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+
+<body class="login-page">
+  <div class="page-wrap">
+    <div class="topbar">
+      <a href="area-aluno.html" class="back-to-site-btn">
+        <i class="fas fa-arrow-left"></i> <span>Voltar</span>
+      </a>
+
+      <button id="btnSair" class="btn btn-secondary" type="button">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0;"><i class="fas fa-dumbbell"></i> Biblioteca de Exercícios</h2>
+      <p style="margin:6px 0 0 0; color:#bbb;">
+        Aqui você pesquisa exercícios (API externa) e pode montar seu treino depois.
+      </p>
+
+      <div class="row">
+        <div class="col">
+          <label style="display:block; margin:8px 0 6px;">Buscar</label>
+          <input id="q" class="input" placeholder="Ex: squat, bench, pull up..." />
+        </div>
+
+        <div class="col">
+          <label style="display:block; margin:8px 0 6px;">Idioma</label>
+          <select id="lang" class="select">
+            <option value="pt">Português (se disponível)</option>
+            <option value="en">Inglês</option>
+          </select>
+        </div>
+
+        <div class="col" style="display:flex; align-items:flex-end; gap:10px;">
+          <button id="btnBuscar" class="btn btn-primary" type="button">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+          <button id="btnLimpar" class="btn btn-secondary" type="button">
+            Limpar
+          </button>
+        </div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+      <div id="lista" class="grid"></div>
+    </div>
+  </div>
+
+  <!-- Guard + Página -->
+  <script src="../js/guard-aluno.js"></script>
+  <script src="../js/treinos-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin | Bioimpedância</title>
+  <link rel="stylesheet" href="../css/login.css">
+
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .card { max-width: 520px; border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+    label { display:block; margin-top: 10px; }
+    input { width:100%; padding:10px; margin-top:6px; }
+    button { margin-top: 14px; padding: 10px 14px; cursor:pointer; }
+    #msg { margin-top: 12px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Cadastro de Bioimpedância (Admin)</h2>
+
+  <div class="card">
+    <form id="bioForm">
+      <label>Aluno ID
+        <input type="number" id="aluno_id" required />
+      </label>
+
+      <label>Data da medição (YYYY-MM-DD)
+        <input type="date" id="data_medicao" required />
+      </label>
+
+      <label>Peso (kg)
+        <input type="number" step="0.01" id="peso" />
+      </label>
+
+      <label>Altura (m)
+        <input type="number" step="0.01" id="altura" />
+      </label>
+
+      <label>% Gordura
+        <input type="number" step="0.01" id="percentual_gordura" />
+      </label>
+
+      <label>Massa magra (kg)
+        <input type="number" step="0.01" id="massa_magra" />
+      </label>
+
+      <label>Massa gorda (kg)
+        <input type="number" step="0.01" id="massa_gorda" />
+      </label>
+
+      <label>Água corporal (%)
+        <input type="number" step="0.01" id="agua_corporal" />
+      </label>
+
+      <label>TMB (kcal)
+        <input type="number" id="taxa_metabolica_basal" />
+      </label>
+
+      <label>IMC
+        <input type="number" step="0.01" id="imc" />
+      </label>
+
+      <button type="submit">Salvar bioimpedância</button>
+      <div id="msg"></div>
+    </form>
+  </div>
+
+  <script src="../js/admin-bio.js"></script>
+</body>
+</html>
